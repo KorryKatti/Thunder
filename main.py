@@ -3,6 +3,8 @@ import requests
 from bs4 import BeautifulSoup
 import customtkinter as ctk
 import subprocess
+import os
+import shutil
 
 def read_version():
     with open('config.json', 'r') as f:
@@ -24,6 +26,11 @@ def close_window(window):
     window.destroy()
 
 def compare_versions():
+    # Delete the "update" folder if it exists
+    update_folder = "update"
+    if os.path.exists(update_folder):
+        shutil.rmtree(update_folder)
+
     local_version = read_version()
     external_url = 'https://korrykatti.github.io/others/thunder/version.html'  # Replace this with the actual URL of the external website
     external_version = get_external_version(external_url)
