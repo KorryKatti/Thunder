@@ -8,4 +8,11 @@ app = customtkinter.CTk()  # create CTk window like you do with the Tk window
 app.geometry("400x240")
 app.resizable(True, True)
 app.title("Thunder 🗲")
+
+
+
+
+
+
+
 app.mainloop()
