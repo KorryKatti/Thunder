@@ -10,16 +10,20 @@ app.geometry("400x240")
 app.resizable(True, True)
 app.title("Thunder 🗲")
 
+# Define the callback function for the optionmenu
+def optionmenu_callback(choice):
+    print("Optionmenu dropdown clicked:", choice)
+
 # Create a frame inside the main window for organizing widgets
 frame = customtkinter.CTkFrame(app)
 frame.pack(fill=customtkinter.BOTH, expand=True, padx=20, pady=20)  # Pack the frame to fill the window
 
-# Add widgets to the frame
-label = customtkinter.CTkLabel(frame, text="This is a label inside the frame")
-label.grid(row=0, column=0, padx=10, pady=10, sticky=customtkinter.W)  # Align to the west (left)
+# Create the optionmenu widget
+optionmenu = customtkinter.CTkOptionMenu(frame, values=["Home", "Check For Updates", "Quit"],
+                                         command=optionmenu_callback)
+optionmenu.grid(row=0, column=2, padx=10, pady=10, sticky=customtkinter.W)  # Align to the west (left)
 
-button = customtkinter.CTkButton(frame, text="Click me")
-button.grid(row=0, column=1, padx=10, pady=10, sticky=customtkinter.W)  # Align to the west (left)
+
 
 # Start the main event loop
 app.mainloop()
