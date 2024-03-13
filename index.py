@@ -9,7 +9,6 @@ from io import BytesIO
 # Launch repup.py in the background
 subprocess.Popen(["python", "appfiles/repup.py"])
 
-
 # Set the appearance mode and default color theme
 ctk.set_appearance_mode("dark")  # Modes: system (default), light, dark
 ctk.set_default_color_theme("dark-blue")  # Themes: blue (default), dark-blue, green
@@ -59,8 +58,8 @@ def create_labels():
                 download_button.pack()
 
                 # Create a separator line
-                separator = ctk.CTkSeparator(scrollable_frame, orient="horizontal")
-                separator.pack(fill="x")
+                separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
+                separator.pack()
 
 # Create the main application window
 app = ctk.CTk()
@@ -123,5 +122,3 @@ create_labels()
 
 # Start the main event loop
 app.mainloop()
-
-
