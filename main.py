@@ -51,7 +51,7 @@ def compare_versions():
     label.pack(pady=20)
 
     # Close the window after 7 seconds
-    app.after(7000, close_window, app)
+    app.after(3000, close_window, app)
 
     app.mainloop()
 
