@@ -1,0 +1,35 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# Automate the acceptance of pull requests and restrict editing to the original committer.
+
+name: Pull Request Automation
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+jobs:
+  accept_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      
+      - name: Merge pull request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: Automated pull request acceptance
+          title: Automated pull request acceptance
+          body: This pull request has been automatically accepted.
+          author: korrykatti
+          base: main
+      
+      - name: Restrict editing to original committer
+        uses: srt32/commits-to-pr@main
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-owner: true
