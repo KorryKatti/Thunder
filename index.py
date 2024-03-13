@@ -73,13 +73,15 @@ app.resizable(True, True)
 app.title("Thunder 🗲")
 
 # Define the callback function for the optionmenu
-# Define the callback function for the optionmenu
 def optionmenu_callback(choice):
     print("Optionmenu dropdown clicked:", choice)
     if choice == "Quit":
         quit(app)
     elif choice == "Home":
         create_labels()
+    elif choice == "Client Update":
+        app.destroy()  # Close the current window
+        subprocess.Popen(["python", "updater.py"])  # Run updater.py
 
 
 # Callback Function for Libmenu
