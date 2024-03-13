@@ -1,68 +1,51 @@
 import requests
 from bs4 import BeautifulSoup
 import json
+import time
 import os
 
-# Define the URL pattern for the HTML pages
-url_pattern = "https://korrykatti.github.io/thapps/apps/{:05d}.html"
-
-# Function to fetch application data from HTML pages
-def fetch_application_data(num):
-    url = url_pattern.format(num)
+def fetch_data(url):
     response = requests.get(url)
-    print(f"Fetching data from {url}. Status code: {response.status_code}")
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
-        app_name = soup.find('h1', {'id': 'appName'})
-        icon_url = soup.find('h2', {'id': 'iconUrl'})
-        version = soup.find('h2', {'id': 'version'})
-        repo_url = soup.find('h2', {'id': 'repoUrl'})
-        main_file = soup.find('h2', {'id': 'mainFile'})
-        if all((app_name, icon_url, version, repo_url, main_file)):
-            return {
-                'app_name': app_name.text.strip(),
-                'icon_url': icon_url.text.strip(),
-                'version': version.text.strip(),
-                'repo_url': repo_url.text.strip(),
-                'main_file': main_file.text.strip()
-            }
-    return None
+        app_name = soup.find('h1', {'id': 'appName'}).text.strip()
+        icon_url = soup.find('h2', {'id': 'iconUrl'}).text.strip()
+        version = soup.find('h2', {'id': 'version'}).text.strip()
+        repo_url = soup.find('h2', {'id': 'repoUrl'}).text.strip()
+        main_file = soup.find('h2', {'id': 'mainFile'}).text.strip()
 
-# Fetch application data for all HTML pages
-def fetch_all_application_data():
-    app_data = {}
-    num = 1
-    while True:
-        data = fetch_application_data(num)
-        if data is None:
-            break
-        app_data[num] = data
-        num += 1
-    return app_data
-
-# Main function
-def main():
-    # Fetch application data from HTML pages
-    application_data = fetch_all_application_data()
-
-    # Print the fetched data
-    for num, data in application_data.items():
-        print(f"Application {num}:")
-        print(f"Name: {data['app_name']}")
-        print(f"Icon URL: {data['icon_url']}")
-        print(f"Version: {data['version']}")
-        print(f"Repo URL: {data['repo_url']}")
-        print(f"Main File: {data['main_file']}")
-        print()
-
-    # Save application data to a file
-    file_path = os.path.join(os.path.dirname(__file__), 'app_data.json')
-    if application_data:
-        with open(file_path, 'w') as f:
-            json.dump(application_data, f, indent=4)
-        print("Application data saved to app_data.json")
+        application_data = {
+            'app_name': app_name,
+            'icon_url': icon_url,
+            'version': version,
+            'repo_url': repo_url,
+            'main_file': main_file
+        }
+        return application_data
     else:
-        print("No application data fetched. No JSON file created.")
+        print(f"Failed to fetch data from {url}. Status code: {response.status_code}")
+        return None
+
+def check_for_updates():
+    url_base = 'https://korrykatti.github.io/thapps/apps/'
+    data_folder = 'data'
+
+    if not os.path.exists(data_folder):
+        os.makedirs(data_folder)
+
+    for i in range(1, 100):  # Assuming maximum of 99 files
+        url = f"{url_base}{i:05d}.html"  # Pad number with leading zeros
+        data = fetch_data(url)
+        if data:
+            with open(f"{data_folder}/{i:05d}.json", 'w') as f:
+                json.dump(data, f, indent=4)
+        else:
+            break
+
+def main():
+    while True:
+        check_for_updates()
+        time.sleep(60)  # Check for updates every one minute
 
 if __name__ == "__main__":
     main()
