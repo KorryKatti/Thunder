@@ -30,6 +30,19 @@ def main():
     # Display "Done" message
     print("Done")
 
+   # Change directory to the current directory
+    os.chdir(os.path.dirname(__file__))
+
+    # Create and activate a virtual environment
+    subprocess.run(["python", "-m", "venv", "myenv"])
+    if os.name == 'posix':  # Unix-like OS (Linux/Mac)
+        subprocess.run(["source", "myenv/bin/activate"])
+    elif os.name == 'nt':   # Windows
+        subprocess.run(["myenv\\Scripts\\activate.bat"])
+
+    # Install requirements.txt
+    subprocess.run(["pip", "install", "-r", "requirements.txt"])
+
     # Launch index.py
     subprocess.run(["python", "index.py"])
 
