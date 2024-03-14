@@ -31,11 +31,11 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Display "Done" message
-    print("Done")
-
-    # Launch index.py
-    subprocess.run(["python", "index.py"])
+    # Execute shell script to activate environment and install requirements
+    if sys.platform == 'win32':  # Windows
+        subprocess.run(["cmd", "/c", "activate_env.bat"], shell=True)
+    else:  # Unix-like OS (Linux/Mac)
+        subprocess.run(["bash", "-c", "source activate_env.sh"], shell=True)
 
 if __name__ == "__main__":
     main()
