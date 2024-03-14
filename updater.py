@@ -32,18 +32,13 @@ def main():
     copy_files(update_dir, os.path.dirname(__file__))
 
     # Create virtual environment
-    python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
-    subprocess.run([python_executable, "-m", "venv", "myenv"])
-
-    # Ensure activation script is executable
-    activation_script = os.path.join("myenv", "bin", "activate")
-    os.chmod(activation_script, 0o755)
+    subprocess.run(["python", "-m", "venv", "myenv"])
 
     # Activate virtual environment
     if sys.platform == 'win32':  # Windows
-        subprocess.run(["myenv\\Scripts\\activate.bat"], shell=True)
+        subprocess.run(["myenv\\Scripts\\activate.bat"])
     else:  # Unix-like OS (Linux/Mac)
-        subprocess.run(["source", "myenv/bin/activate"], shell=True)
+        subprocess.run(["source", "myenv/bin/activate"])
 
     # Install requirements
     subprocess.run(["pip", "install", "-r", "requirements.txt"])
@@ -53,6 +48,7 @@ def main():
 
     # Launch index.py
     subprocess.run(["python", "index.py"])
+
 
 if __name__ == "__main__":
     main()
