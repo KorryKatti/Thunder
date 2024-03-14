@@ -31,11 +31,12 @@ def main():
     copy_files(update_dir, os.path.dirname(__file__))
 
     # Create virtual environment
-    subprocess.run(["python", "-m", "venv", "myenv"])
+    os.system("python -m venv myenv")
 
-    # Activate virtual environment
-    activate_script = os.path.join("myenv", "Scripts" if os.name == "nt" else "bin", "activate")
-    subprocess.run([activate_script])
+    if os.name == 'posix':  # Unix-like OS (Linux/Mac)
+        os.system("source myenv/bin/activate")
+    elif os.name == 'nt':   # Windows
+        os.system("myenv\\Scripts\\activate.bat")
 
     # Install requirements
     subprocess.run(["pip", "install", "-r", "requirements.txt"])
