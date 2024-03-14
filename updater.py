@@ -16,6 +16,9 @@ def copy_files(source_dir, destination_dir):
             else:
                 copy_files(source, destination)  # Recursively copy subdirectories
         else:
+            # Exclude .git directory
+            if ".git" in source:
+                continue
             shutil.copy2(source, destination, follow_symlinks=False)
 
 def main():
