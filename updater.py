@@ -30,6 +30,16 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
+    # Create virtual environment
+    subprocess.run(["python", "-m", "venv", "myenv"])
+
+    # Activate virtual environment
+    activate_script = os.path.join("myenv", "Scripts" if os.name == "nt" else "bin", "activate")
+    subprocess.run([activate_script])
+
+    # Install requirements
+    subprocess.run(["pip", "install", "-r", "requirements.txt"])
+
     # Display "Done" message
     print("Done")
 
