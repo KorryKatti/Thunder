@@ -1,6 +1,7 @@
 import os
 import shutil
 import subprocess
+import sys
 
 def clone_repository(repo_url, destination_dir):
     os.makedirs(destination_dir, exist_ok=True)  # Ensure the directory exists
@@ -31,18 +32,17 @@ def main():
     copy_files(update_dir, os.path.dirname(__file__))
 
     # Create virtual environment
-    os.system("python -m venv myenv")
+    python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
+    subprocess.run([python_executable, "-m", "venv", "myenv"])
 
-    if os.name == 'posix':  # Unix-like OS (Linux/Mac)
-        os.system("source myenv/bin/activate" & "pip install -r requirements.txt")
-        # Install requirements
-        #os.system("pip install -r requirements.txt")
-    elif os.name == 'nt':   # Windows
-        os.system("myenv\\Scripts\\activate.bat")
-        # Install requirements
-        os.system("pip install -r requirements.txt")
+    # Activate virtual environment
+    if sys.platform == 'win32':  # Windows
+        subprocess.run(["myenv\\Scripts\\activate.bat"], shell=True)
+    else:  # Unix-like OS (Linux/Mac)
+        subprocess.run(["source", "myenv/bin/activate"], shell=True)
 
-    
+    # Install requirements
+    subprocess.run(["pip", "install", "-r", "requirements.txt"])
 
     # Display "Done" message
     print("Done")
