@@ -34,9 +34,9 @@ def main():
     os.system("python -m venv myenv")
 
     if os.name == 'posix':  # Unix-like OS (Linux/Mac)
-        os.system("source myenv/bin/activate")
+        os.system("source myenv/bin/activate" & "pip install -r requirements.txt")
         # Install requirements
-        os.system("pip install -r requirements.txt")
+        #os.system("pip install -r requirements.txt")
     elif os.name == 'nt':   # Windows
         os.system("myenv\\Scripts\\activate.bat")
         # Install requirements
