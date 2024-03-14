@@ -7,9 +7,10 @@ import shutil
 
 def activate_virtualenv():
     if os.name == 'posix':  # Unix-like OS (Linux/Mac)
-        subprocess.run(["source", "myenv/bin/activate"], shell=True)
+        subprocess.run(["/bin/bash", "-c", "source myenv/bin/activate"], shell=True)
     elif os.name == 'nt':   # Windows
         subprocess.run(["myenv\\Scripts\\activate.bat"], shell=True)
+
 
 def read_version():
     with open('config.json', 'r') as f:
