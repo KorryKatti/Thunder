@@ -13,6 +13,10 @@ subprocess.Popen(["python", "appfiles/repup.py"])
 ctk.set_appearance_mode("dark")  # Modes: system (default), light, dark
 ctk.set_default_color_theme("dark-blue")  # Themes: blue (default), dark-blue, green
 
+#what download does
+def download_app():
+    print("Download button clicked")
+
 def quit(window):
     window.destroy()    
 
@@ -42,7 +46,12 @@ def create_labels():
                 # Create a label for the application name
                 app_name = app_data.get("app_name", "Unknown")
                 name_label = ctk.CTkLabel(app_frame, text=app_name)
-                name_label.pack(side=ctk.LEFT, padx=10, pady=5)
+                name_label.pack(side=ctk.TOP, padx=10, pady=5)
+
+                # Display the application description
+                description = app_data.get("description", "No description available")
+                description_label = ctk.CTkLabel(app_frame, text=description, wraplength=700)
+                description_label.pack(side=ctk.TOP, padx=10, pady=5)
 
                 # Display the application icon
                 icon_url = app_data.get("icon_url", "")
@@ -52,23 +61,29 @@ def create_labels():
 
                     if icon_image:
                         # Create a CTkImage object
-                        ct_image = ctk.CTkImage(light_image=icon_image, dark_image=icon_image, size=(30, 30))
+                        ct_image = ctk.CTkImage(light_image=icon_image, dark_image=icon_image, size=(100, 100))
 
                         # Create a label to display the image
                         image_label = ctk.CTkLabel(app_frame, image=ct_image, text="")
                         image_label.pack(side=ctk.LEFT, padx=10, pady=5)
 
+                # Display the version
+                version = app_data.get("version", "Couldn't get version")
+                version_label = ctk.CTkLabel(app_frame, text=version, wraplength=700)
+                version_label.pack(side=ctk.LEFT, padx=10, pady=5)
+
                 # Create a button for downloading the application
-                download_button = ctk.CTkButton(app_frame, text="Download")
-                download_button.pack(side=ctk.LEFT, padx=10, pady=5)
+                download_button = ctk.CTkButton(app_frame, text="Download", command=download_app)
+                download_button.pack(side=ctk.RIGHT, padx=10, pady=5)
 
                 # Create a separator line
                 separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
                 separator.pack(fill=ctk.X, padx=10, pady=5)
 
+
 # Create the main application window
 app = ctk.CTk()
-app.geometry("800x600")
+app.geometry("1280x720")
 app.resizable(True, True)
 app.title("Thunder 🗲")
 
@@ -124,8 +139,10 @@ devmenu = ctk.CTkOptionMenu(frame,values=["Dev Blog", "Changelogs"],
                                          command=devmenu_callback)
 devmenu.grid(row=0, column=3, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
 
+
+
 # Create a scrollable frame inside the existing frame to display contents
-scrollable_frame = ctk.CTkScrollableFrame(frame, width=750, height=750, corner_radius=0, fg_color="transparent")
+scrollable_frame = ctk.CTkScrollableFrame(frame, width=1280, height=720, corner_radius=0, fg_color="transparent")
 scrollable_frame.grid(row=1, column=0, columnspan=4, sticky="nsew")
 
 # Add widgets to the scrollable frame

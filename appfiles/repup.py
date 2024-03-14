@@ -13,13 +13,15 @@ def fetch_data(url):
         version = soup.find('h2', {'id': 'version'}).text.strip()
         repo_url = soup.find('h2', {'id': 'repoUrl'}).text.strip()
         main_file = soup.find('h2', {'id': 'mainFile'}).text.strip()
+        description = soup.find('h2', {'id': 'description'}).text.strip()
 
         application_data = {
             'app_name': app_name,
             'icon_url': icon_url,
             'version': version,
             'repo_url': repo_url,
-            'main_file': main_file
+            'main_file': main_file,
+            'description': description
         }
         return application_data
     else:
