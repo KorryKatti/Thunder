@@ -35,11 +35,14 @@ def main():
 
     if os.name == 'posix':  # Unix-like OS (Linux/Mac)
         os.system("source myenv/bin/activate")
+        # Install requirements
+        os.system("pip install -r requirements.txt")
     elif os.name == 'nt':   # Windows
         os.system("myenv\\Scripts\\activate.bat")
+        # Install requirements
+        os.system("pip install -r requirements.txt")
 
-    # Install requirements
-    os.system("pip install -r requirements.txt")
+    
 
     # Display "Done" message
     print("Done")
