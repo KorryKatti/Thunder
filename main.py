@@ -1,10 +1,15 @@
 import json
 import requests
 from bs4 import BeautifulSoup
-import customtkinter as ctk
 import subprocess
 import os
 import shutil
+
+def activate_virtualenv():
+    if os.name == 'posix':  # Unix-like OS (Linux/Mac)
+        subprocess.run(["source", "myenv/bin/activate"], shell=True)
+    elif os.name == 'nt':   # Windows
+        subprocess.run(["myenv\\Scripts\\activate.bat"], shell=True)
 
 def read_version():
     with open('config.json', 'r') as f:
@@ -26,6 +31,8 @@ def close_window(window):
     window.destroy()
 
 def compare_versions():
+    activate_virtualenv()
+    
     # Delete the "update" folder if it exists
     update_folder = "update"
     if os.path.exists(update_folder):
@@ -40,7 +47,7 @@ def compare_versions():
         else:
             result_message = f"Software is not up to date. Initializing Update.\nLocal version: {local_version}\nExternal version: {external_version}"
     else:
-        result_message = "Failed to retrieve external version.Continuing Either way to app"
+        result_message = "Failed to retrieve external version. Continuing either way to app"
 
     # Create a customtkinter window to display the results
     app = ctk.CTk()
