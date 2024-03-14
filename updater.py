@@ -31,16 +31,11 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Get path to appfiles directory
-    appfiles_dir = os.path.join(os.path.dirname(__file__), "appfiles")
+    # Display "Done" message
+    print("Done")
 
-    # Execute shell script to activate environment and install requirements
-    if sys.platform == 'win32':  # Windows
-        script_path = os.path.join(appfiles_dir, "activate_env.bat")
-        subprocess.run([script_path], shell=True)
-    else:  # Unix-like OS (Linux/Mac)
-        script_path = os.path.join(appfiles_dir, "activate_env.sh")
-        subprocess.run(["bash", "-c", f"source {script_path}"], shell=True)
+    # Launch index.py
+    subprocess.run(["python", "index.py"])
 
 if __name__ == "__main__":
     main()
