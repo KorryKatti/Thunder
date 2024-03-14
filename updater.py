@@ -31,14 +31,18 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Create virtual environment
-    subprocess.run(["python", "-m", "venv", "myenv"])
-
-    # Activate virtual environment
+    # Create shell script to activate virtual environment
     if sys.platform == 'win32':  # Windows
-        subprocess.run(["myenv\\Scripts\\activate.bat"])
+        activate_script = "activate_env.bat"
+        with open(activate_script, "w") as script_file:
+            script_file.write(f"call myenv\\Scripts\\activate.bat")
     else:  # Unix-like OS (Linux/Mac)
-        subprocess.run(["source", "myenv/bin/activate"])
+        activate_script = "activate_env.sh"
+        with open(activate_script, "w") as script_file:
+            script_file.write(". myenv/bin/activate")
+
+    # Execute shell script to activate virtual environment
+    os.system(f"/bin/bash --rcfile {activate_script}" if sys.platform != 'win32' else activate_script)
 
     # Install requirements
     subprocess.run(["pip", "install", "-r", "requirements.txt"])
@@ -48,7 +52,6 @@ def main():
 
     # Launch index.py
     subprocess.run(["python", "index.py"])
-
 
 if __name__ == "__main__":
     main()
