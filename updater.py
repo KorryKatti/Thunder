@@ -22,6 +22,10 @@ def copy_files(source_dir, destination_dir):
                 continue
             shutil.copy2(source, destination, follow_symlinks=False)
 
+def create_virtual_env():
+    # Create virtual environment
+    subprocess.run([sys.executable, "-m", "venv", "myenv"])
+
 def main():
     # Clone the updated repository into a new folder
     repo_url = 'https://github.com/KorryKatti/Thunder.git'  # Replace with your GitHub repository URL
@@ -30,6 +34,9 @@ def main():
 
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
+
+    # Create virtual environment
+    create_virtual_env()
 
     # Get path to appfiles directory
     appfiles_dir = os.path.join(os.path.dirname(__file__), "appfiles")
