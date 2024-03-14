@@ -31,27 +31,14 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Create shell script to activate virtual environment
+    # Activate virtual environment
     if sys.platform == 'win32':  # Windows
-        activate_script = "activate_env.bat"
-        with open(activate_script, "w") as script_file:
-            script_file.write(f"call myenv\\Scripts\\activate.bat")
+        activate_script = "myenv\\Scripts\\activate.bat"
     else:  # Unix-like OS (Linux/Mac)
-        activate_script = "activate_env.sh"
-        with open(activate_script, "w") as script_file:
-            script_file.write(". myenv/bin/activate")
+        activate_script = "source myenv/bin/activate"
 
-    # Execute shell script to activate virtual environment
-    os.system(f"/bin/bash --rcfile {activate_script}" if sys.platform != 'win32' else activate_script)
-
-    # Install requirements
-    subprocess.run(["pip", "install", "-r", "requirements.txt"])
-
-    # Display "Done" message
-    print("Done")
-
-    # Launch index.py
-    subprocess.run(["python", "index.py"])
+    # Install requirements and launch index.py
+    subprocess.run([activate_script, "&&", "pip", "install", "-r", "requirements.txt", "&&", "python", "index.py"], shell=True)
 
 if __name__ == "__main__":
     main()
