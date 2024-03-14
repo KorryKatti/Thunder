@@ -39,7 +39,7 @@ def main():
         os.system("myenv\\Scripts\\activate.bat")
 
     # Install requirements
-    subprocess.run(["pip", "install", "-r", "requirements.txt"])
+    os.system("pip install -r requirements.txt")
 
     # Display "Done" message
     print("Done")
