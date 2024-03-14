@@ -36,9 +36,11 @@ def main():
 
     # Execute shell script to activate environment and install requirements
     if sys.platform == 'win32':  # Windows
-        subprocess.run(["cmd", "/c", "appfiles/activate_env.bat"], shell=True)
+        script_path = os.path.join(appfiles_dir, "activate_env.bat")
+        subprocess.run([script_path], shell=True)
     else:  # Unix-like OS (Linux/Mac)
-        subprocess.run(["bash", "-c", "appfiles/source activate_env.sh"], shell=True)
+        script_path = os.path.join(appfiles_dir, "activate_env.sh")
+        subprocess.run(["bash", "-c", f"source {script_path}"], shell=True)
 
 if __name__ == "__main__":
     main()
