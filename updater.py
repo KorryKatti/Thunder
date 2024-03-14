@@ -35,6 +35,10 @@ def main():
     python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
     subprocess.run([python_executable, "-m", "venv", "myenv"])
 
+    # Ensure activation script is executable
+    activation_script = os.path.join("myenv", "bin", "activate")
+    os.chmod(activation_script, 0o755)
+
     # Activate virtual environment
     if sys.platform == 'win32':  # Windows
         subprocess.run(["myenv\\Scripts\\activate.bat"], shell=True)
