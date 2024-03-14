@@ -30,14 +30,6 @@ def main():
     # Display "Done" message
     print("Done")
 
-   # Change directory to the current directory
-    os.chdir(os.path.dirname(__file__))
-
-    
-
-    # Install requirements.txt
-    subprocess.run(["pip", "install", "-r", "requirements.txt"])
-
     # Launch index.py
     subprocess.run(["python", "index.py"])
 
