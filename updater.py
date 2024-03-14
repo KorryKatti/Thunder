@@ -47,7 +47,7 @@ def main():
         subprocess.run([script_path], shell=True)
     else:  # Unix-like OS (Linux/Mac)
         script_path = os.path.join(appfiles_dir, "activate_env.sh")
-        subprocess.run(["bash", "-c", f"source {script_path}"], shell=True)
+        subprocess.run(["bash", script_path], shell=True)
 
 if __name__ == "__main__":
     main()
