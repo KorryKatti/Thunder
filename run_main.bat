@@ -1,13 +1,23 @@
 @echo off
 
+REM Check if virtual env 'myenv' exists
 if not exist myenv (
+    echo Creating virtual environment 'myenv'...
     python -m venv myenv
 )
 
-call myenv\Scripts\activate.bat
-myenv\Scripts\python.exe -c "import sys; sys.exit(0 if __import__('importlib.util').find_spec('customtkinter') else 1)"
+REM Activate the virtual environment
+call myenv\Scripts\activate
+
+REM Run main.py if customtkinter exists, otherwise run updater.py
+python -c "import customtkinter" >nul 2>&1
 if %errorlevel% equ 0 (
-    myenv\Scripts\python.exe main.py
+    echo Running main.py...
+    python main.py
 ) else (
-    myenv\Scripts\python.exe updater.py
+    echo Running updater.py...
+    python updater.py
 )
+
+REM Deactivate the virtual environment
+deactivate
