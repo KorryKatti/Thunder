@@ -22,17 +22,6 @@ def copy_files(source_dir, destination_dir):
                 continue
             shutil.copy2(source, destination, follow_symlinks=False)
 
-def create_and_activate_env():
-    # Create virtual environment
-    python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
-    os.system(f"{python_executable} -m venv myenv")
-    print("Virtual environment created")
-
-    # Execute shell script to activate environment
-    script_path = os.path.join('appfiles', 'activate_env.sh' if sys.platform != 'win32' else 'activate_env.bat')
-    print("Executing shell script:", script_path)
-    subprocess.run(["bash", script_path], shell=True)
-
 def main():
     # Clone the updated repository into a new folder
     repo_url = 'https://github.com/KorryKatti/Thunder.git'  # Replace with your GitHub repository URL
@@ -42,8 +31,15 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Create and activate virtual environment
-    create_and_activate_env()
+    # Create virtual environment
+    python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
+    os.system(f"{python_executable} -m venv myenv")
+    print("Virtual environment created")
+
+    # Execute shell script to activate environment
+    script_path = os.path.join('appfiles', 'activate_env.sh' if sys.platform != 'win32' else 'activate_env.bat')
+    print("Executing shell script:", script_path)
+    subprocess.run(["bash", script_path])
 
     # Install requirements
     os.system("pip install -r requirements.txt")

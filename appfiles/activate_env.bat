@@ -1,4 +1,3 @@
 @echo off
 call myenv\Scripts\activate.bat
-pip install -r requirements.txt
-python index.py
+call myenv\Scripts\python.exe index.py
