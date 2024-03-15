@@ -31,7 +31,7 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Activate virtual environment
+    # Create virtual environment
     python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
     os.system(f"{python_executable} -m venv myenv")
     print("Virtual environment created")
