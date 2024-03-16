@@ -112,6 +112,7 @@ def download_app(app_data):
     version_label.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Fetch README content from the repository URL
+    # Fetch README content from the repository URL
     repo_url = app_data.get("repo_url", "")
     if repo_url:
         branches = ["main", "master"]  # Branches to check
@@ -140,6 +141,7 @@ def download_app(app_data):
             print("Failed to fetch README content from any branch.")
     else:
         print("Repository URL not provided.")
+
 
 
     # Create a button for downloading the repository
