@@ -219,7 +219,14 @@ def download_repo(repo_url, app_id, app_name):
     # Create a progress bar for showing download progress
     progress_bar = ctk.CTkProgressBar(download_window, orientation="horizontal", mode="indeterminate")
     progress_bar.pack(padx=20, pady=10)
-    progress_bar.start()  # Start the progress bar animation       
+    progress_bar.start()  # Start the progress bar animation   
+
+    # Function to close the top-up window after 3 seconds
+    def close_window():
+        download_window.destroy()
+
+    # Schedule the close_window function to be called after 3 seconds
+    download_window.after(3000, close_window)    
 
 # Create a frame inside the main window for organizing widgets
 frame = ctk.CTkFrame(app)
