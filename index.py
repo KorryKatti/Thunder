@@ -181,8 +181,20 @@ def devmenu_callback():
 def quit(window):
     window.destroy()    
 
-def download_repo():
-    pass       
+def download_repo(theurl):
+    # Create a top-up window for downloading repository
+    print(theurl)
+    download_window = ctk.CTkToplevel(app)
+    download_window.geometry("400x300")
+    download_window.title("Download Repository")
+
+    label = ctk.CTkLabel(download_window, text="Downloading Repository")
+    label.pack(padx=20, pady=20)
+
+    # Create a progress bar for showing download progress
+    progress_bar = ctk.CTkProgressBar(download_window, orientation="horizontal", mode="indeterminate")
+    progress_bar.pack(padx=20, pady=10)
+    progress_bar.start()  # Start the progress bar animation       
 
 # Create a frame inside the main window for organizing widgets
 frame = ctk.CTkFrame(app)
