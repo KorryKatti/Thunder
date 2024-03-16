@@ -32,53 +32,103 @@ def download_image(url):
         return None
 
 # Function to create labels for each application data
+# Function to create labels for each application data
 def create_labels():
     data_dir = "data"
     for filename in os.listdir(data_dir):
         if filename.endswith(".json"):
-            with open(os.path.join(data_dir, filename), "r") as f:
-                app_data = json.load(f)
+            try:
+                with open(os.path.join(data_dir, filename), "r") as f:
+                    app_data = json.load(f)
 
-                # Create a frame for each application data
-                app_frame = ctk.CTkFrame(scrollable_frame)
-                app_frame.pack(fill=ctk.X, padx=10, pady=5)
+                    # Create a frame for each application data
+                    app_frame = ctk.CTkFrame(scrollable_frame)
+                    app_frame.pack(fill=ctk.X, padx=10, pady=5)
 
-                # Create a label for the application name
-                app_name = app_data.get("app_name", "Unknown")
-                name_label = ctk.CTkLabel(app_frame, text=app_name)
-                name_label.pack(side=ctk.TOP, padx=10, pady=5)
+                    # Create a label for the application name
+                    app_name = app_data.get("app_name", "Unknown")
+                    name_label = ctk.CTkLabel(app_frame, text=app_name)
+                    name_label.pack(side=ctk.TOP, padx=10, pady=5)
 
-                # Display the application description
-                description = app_data.get("description", "No description available")
-                description_label = ctk.CTkLabel(app_frame, text=description, wraplength=700)
-                description_label.pack(side=ctk.TOP, padx=10, pady=5)
+                    # Display the application description
+                    description = app_data.get("description", "No description available")
+                    description_label = ctk.CTkLabel(app_frame, text=description, wraplength=700)
+                    description_label.pack(side=ctk.TOP, padx=10, pady=5)
 
-                # Display the application icon
-                icon_url = app_data.get("icon_url", "")
-                if icon_url:
-                    # Download the image from URL
-                    icon_image = download_image(icon_url)
+                    # Display the version
+                    version = app_data.get("version", "Couldn't get version")
+                    version_label = ctk.CTkLabel(app_frame, text=version, wraplength=700)
+                    version_label.pack(side=ctk.LEFT, padx=10, pady=5)
 
-                    if icon_image:
-                        # Create a CTkImage object
-                        ct_image = ctk.CTkImage(light_image=icon_image, dark_image=icon_image, size=(100, 100))
+                    # Create a button for downloading the application
+                    download_button = ctk.CTkButton(app_frame, text="Download", command=lambda app=app_data: download_app(app))
+                    download_button.pack(side=ctk.RIGHT, padx=10, pady=5)
 
-                        # Create a label to display the image
-                        image_label = ctk.CTkLabel(app_frame, image=ct_image, text="")
-                        image_label.pack(side=ctk.LEFT, padx=10, pady=5)
+                    # Create a separator line
+                    separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
+                    separator.pack(fill=ctk.X, padx=10, pady=5)
+            except Exception as e:
+                print(f"Error processing JSON file {filename}: {e}")
 
-                # Display the version
-                version = app_data.get("version", "Couldn't get version")
-                version_label = ctk.CTkLabel(app_frame, text=version, wraplength=700)
-                version_label.pack(side=ctk.LEFT, padx=10, pady=5)
+# Function to display detailed information about the selected app
+def download_app(app_data):
+    # Clear the existing widgets in the scrollable frame
+    for widget in scrollable_frame.winfo_children():
+        widget.destroy()
 
-                # Create a button for downloading the application
-                download_button = ctk.CTkButton(app_frame, text="Download", command=download_app)
-                download_button.pack(side=ctk.RIGHT, padx=10, pady=5)
+    # Create a frame for displaying app details
+    details_frame = ctk.CTkFrame(scrollable_frame)
+    details_frame.pack(fill=ctk.X, padx=10, pady=5)
 
-                # Create a separator line
-                separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
-                separator.pack(fill=ctk.X, padx=10, pady=5)
+    # Display the application icon
+    icon_url = app_data.get("icon_url", "")
+    if icon_url:
+        # Download the image from URL
+        icon_image = download_image(icon_url)
+
+        if icon_image:
+            # Create a CTkImage object
+            ct_image = ctk.CTkImage(light_image=icon_image, dark_image=icon_image, size=(100, 100))
+
+            # Create a label to display the image
+            image_label = ctk.CTkLabel(details_frame, image=ct_image, text="")
+            image_label.pack(side=ctk.LEFT, padx=10, pady=5)
+
+    # Create a label for the application name
+    app_name = app_data.get("app_name", "Unknown")
+    name_label = ctk.CTkLabel(details_frame, text=app_name, font=("Helvetica", 16, "bold"))
+    name_label.pack(side=ctk.TOP, padx=10, pady=5)
+
+    # Display the application description
+    description = app_data.get("description", "No description available")
+    description_label = ctk.CTkLabel(details_frame, text=description, wraplength=700)
+    description_label.pack(side=ctk.TOP, padx=10, pady=5)
+
+    # Display the version
+    version = app_data.get("version", "Version not specified")
+    version_label = ctk.CTkLabel(details_frame, text=f"Version: {version}")
+    version_label.pack(side=ctk.TOP, padx=10, pady=5)
+
+    # Fetch README content from the repository URL
+    repo_url = app_data.get("repo_url", "")
+    if repo_url:
+        try:
+            response = requests.get(repo_url + "/blob/main/README.md")
+            response.raise_for_status()
+            readme_content = response.text
+            # Create a label for displaying README content
+            readme_label = ctk.CTkLabel(details_frame, text=readme_content, wraplength=700)
+            readme_label.pack(side=ctk.TOP, padx=10, pady=5)
+        except Exception as e:
+            print(f"Error fetching README content: {e}")
+
+    # Create a button for downloading the application
+    download_button = ctk.CTkButton(details_frame, text="Download", command=lambda: download_app(app_data))
+    download_button.pack(side=ctk.TOP, padx=10, pady=5)
+
+    # Create a separator line
+    separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
+    separator.pack(fill=ctk.X, padx=10, pady=5)
 
 
 # Create the main application window
@@ -93,10 +143,15 @@ def optionmenu_callback(choice):
     if choice == "Quit":
         quit(app)
     elif choice == "Home":
+        # Clear the existing widgets in the scrollable frame
+        for widget in scrollable_frame.winfo_children():
+            widget.destroy()
+        # Create new labels for applications
         create_labels()
     elif choice == "Client Update":
         app.destroy()  # Close the current window
         subprocess.Popen(["python", "updater.py"])  # Run updater.py
+
 
 
 # Callback Function for Libmenu
