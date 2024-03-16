@@ -116,7 +116,7 @@ def download_app(app_data):
 
         for branch in branches:
             try:
-                response = requests.get(f"{repo_url}/raw/{branch}/README.md")
+                response = requests.get(f"{repo_url}/raw/{branch}/Readme.md")
                 response.raise_for_status()
                 readme_content = response.text
                 
