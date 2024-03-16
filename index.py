@@ -6,8 +6,8 @@ import requests
 from PIL import Image
 from io import BytesIO
 import markdown
-import tkinterhtml as tkhtml
- 
+from tkinterhtml import HtmlFrame
+
 # Launch repup.py in the background
 subprocess.Popen(["python", "appfiles/repup.py"])
 
@@ -112,7 +112,6 @@ def download_app(app_data):
     version_label.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Fetch README content from the repository URL
-    # Fetch README content from the repository URL
     repo_url = app_data.get("repo_url", "")
     if repo_url:
         branches = ["main", "master"]  # Branches to check
@@ -127,7 +126,8 @@ def download_app(app_data):
                 html_content = markdown.markdown(readme_content, output_format="html")
 
                 # Create a TkinterHTML widget to display HTML content
-                readme_html = tkhtml.HTMLLabel(details_frame, html=html_content)
+                readme_html = HtmlFrame(details_frame)
+                readme_html.set_content(html_content)
                 readme_html.pack(side=ctk.TOP, padx=10, pady=5)
 
                 # Create a button for downloading the repository
@@ -141,21 +141,6 @@ def download_app(app_data):
             print("Failed to fetch README content from any branch.")
     else:
         print("Repository URL not provided.")
-
-
-
-    # Create a button for downloading the repository
-    download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=download_repo)
-    download_repo_button.pack(side=ctk.TOP, padx=10, pady=5)
-
-    # Create a separator line
-    separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
-    separator.pack(fill=ctk.X, padx=10, pady=5)
-
-
-def download_repo():
-    print("Download repository button clicked")
-
 
 # Create the main application window
 app = ctk.CTk()
@@ -178,8 +163,6 @@ def optionmenu_callback(choice):
         app.destroy()  # Close the current window
         subprocess.Popen(["python", "updater.py"])  # Run updater.py
 
-
-
 # Callback Function for Libmenu
 def libmenu_callback():
     pass
@@ -195,6 +178,9 @@ def devmenu_callback():
 #functions for optionmenu
 def quit(window):
     window.destroy()    
+
+def download_repo():
+    pass       
 
 # Create a frame inside the main window for organizing widgets
 frame = ctk.CTkFrame(app)
@@ -219,8 +205,6 @@ commenu.grid(row=0, column=2, padx=10, pady=0, sticky=ctk.W)  # Align to the wes
 devmenu = ctk.CTkOptionMenu(frame,values=["Dev Blog", "Changelogs"],
                                          command=devmenu_callback)
 devmenu.grid(row=0, column=3, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
-
-
 
 # Create a scrollable frame inside the existing frame to display contents
 scrollable_frame = ctk.CTkScrollableFrame(frame, width=1280, height=720, corner_radius=0, fg_color="transparent")
