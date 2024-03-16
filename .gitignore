@@ -4,3 +4,5 @@ appfiles/data
 appfiles/app_data.json
 data/
 update/
+common/
+appfiles/downloads.txt
