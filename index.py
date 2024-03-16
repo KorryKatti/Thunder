@@ -111,6 +111,10 @@ def download_app(app_data):
     version_label = ctk.CTkLabel(details_frame, text=f"Version: {version}")
     version_label.pack(side=ctk.TOP, padx=10, pady=5)
 
+    # Create a button for downloading the repository
+    download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=lambda: download_repo(repo_url))
+    download_repo_button.pack(side=ctk.TOP, padx=10, pady=5)
+
     # Fetch README content from the repository URL
     repo_url = app_data.get("repo_url", "")
     if repo_url:
@@ -130,9 +134,7 @@ def download_app(app_data):
                 readme_html.set_content(html_content)
                 readme_html.pack(side=ctk.TOP, padx=10, pady=5)
 
-                # Create a button for downloading the repository
-                download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=lambda: download_repo(repo_url))
-                download_repo_button.pack(side=ctk.TOP, padx=10, pady=5)
+
 
                 break  # Break the loop if README content is successfully fetched
             except Exception as e:
