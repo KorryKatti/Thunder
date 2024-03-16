@@ -5,6 +5,7 @@ import json
 import requests
 from PIL import Image
 from io import BytesIO
+import markdown
 
 # Launch repup.py in the background
 subprocess.Popen(["python", "appfiles/repup.py"])
@@ -110,6 +111,7 @@ def download_app(app_data):
     version_label.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Fetch README content from the repository URL
+    # Fetch README content from the repository URL
     repo_url = app_data.get("repo_url", "")
     if repo_url:
         branches = ["main", "master"]  # Branches to check
@@ -119,16 +121,16 @@ def download_app(app_data):
                 response = requests.get(f"{repo_url}/raw/{branch}/Readme.md")
                 response.raise_for_status()
                 readme_content = response.text
-                
-                # Split the content into chunks
-                chunk_size = 300  # Adjust as needed
+
+                # Split the content into smaller chunks
+                chunk_size = 500  # Adjust the chunk size as needed
                 chunks = [readme_content[i:i+chunk_size] for i in range(0, len(readme_content), chunk_size)]
-                
-                # Create labels for each chunk
+
+                # Create a CTkLabel for each chunk
                 for chunk in chunks:
-                    chunk_label = ctk.CTkLabel(details_frame, text=chunk, wraplength=700)
-                    chunk_label.pack(side=ctk.TOP, padx=10, pady=5)
-                
+                    readme_label = ctk.CTkLabel(details_frame, text=chunk)
+                    readme_label.pack(side=ctk.TOP, padx=10, pady=5)
+
                 break  # Break the loop if README content is successfully fetched
             except Exception as e:
                 print(f"Error fetching README content for branch {branch}: {e}")
@@ -137,16 +139,17 @@ def download_app(app_data):
     else:
         print("Repository URL not provided.")
 
-
-
-
-    # Create a button for downloading the application
-    download_button = ctk.CTkButton(details_frame, text="Download", command=lambda: download_app(app_data))
-    download_button.pack(side=ctk.BOTTOM, padx=10, pady=5)
+    # Create a button for downloading the repository
+    download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=download_repo)
+    download_repo_button.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Create a separator line
     separator = ctk.CTkLabel(scrollable_frame, text="--------------------------")
     separator.pack(fill=ctk.X, padx=10, pady=5)
+
+
+def download_repo():
+    print("Download repository button clicked")
 
 
 # Create the main application window
