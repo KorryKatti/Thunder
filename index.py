@@ -6,7 +6,8 @@ import requests
 from PIL import Image
 from io import BytesIO
 import markdown
-
+import tkinterhtml as tkhtml
+ 
 # Launch repup.py in the background
 subprocess.Popen(["python", "appfiles/repup.py"])
 
@@ -111,7 +112,6 @@ def download_app(app_data):
     version_label.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Fetch README content from the repository URL
-    # Fetch README content from the repository URL
     repo_url = app_data.get("repo_url", "")
     if repo_url:
         branches = ["main", "master"]  # Branches to check
@@ -122,14 +122,16 @@ def download_app(app_data):
                 response.raise_for_status()
                 readme_content = response.text
 
-                # Split the content into smaller chunks
-                chunk_size = 500  # Adjust the chunk size as needed
-                chunks = [readme_content[i:i+chunk_size] for i in range(0, len(readme_content), chunk_size)]
+                # Render Markdown content as HTML
+                html_content = markdown.markdown(readme_content, output_format="html")
 
-                # Create a CTkLabel for each chunk
-                for chunk in chunks:
-                    readme_label = ctk.CTkLabel(details_frame, text=chunk)
-                    readme_label.pack(side=ctk.TOP, padx=10, pady=5)
+                # Create a TkinterHTML widget to display HTML content
+                readme_html = tkhtml.HTMLLabel(details_frame, html=html_content)
+                readme_html.pack(side=ctk.TOP, padx=10, pady=5)
+
+                # Create a button for downloading the repository
+                download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=lambda: download_repo(repo_url))
+                download_repo_button.pack(side=ctk.TOP, padx=10, pady=5)
 
                 break  # Break the loop if README content is successfully fetched
             except Exception as e:
@@ -138,6 +140,7 @@ def download_app(app_data):
             print("Failed to fetch README content from any branch.")
     else:
         print("Repository URL not provided.")
+
 
     # Create a button for downloading the repository
     download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=download_repo)
