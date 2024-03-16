@@ -112,7 +112,7 @@ def download_app(app_data):
     version_label.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Create a button for downloading the repository
-    download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=lambda: download_repo(repo_url))
+    download_repo_button = ctk.CTkButton(details_frame, text="Download Repository", command=lambda: download_repo(repo_url, app_data.get("app_id", ""), app_data.get("app_name", "")))
     download_repo_button.pack(side=ctk.TOP, padx=10, pady=5)
 
     # Fetch README content from the repository URL
@@ -181,9 +181,34 @@ def devmenu_callback():
 def quit(window):
     window.destroy()    
 
-def download_repo(theurl):
+def download_repo(repo_url, app_id, app_name):
+    # Construct filename
+    filename = f"{app_id}_{app_name}"
+
+    # Check if the "common" directory exists, create if not
+    common_dir = "common"
+    if not os.path.exists(common_dir):
+        os.makedirs(common_dir)
+
+    # Create a directory for the specific app within the "common" directory
+    app_dir = os.path.join(common_dir, filename)
+    if not os.path.exists(app_dir):
+        os.makedirs(app_dir)
+
+    # Clone the GitHub repository specified by repo_url into the newly created directory
+    subprocess.run(["git", "clone", repo_url, app_dir])
+
+    # Check if downloads.txt exists in the "appfiles" folder and update it with the app_id if needed
+    appfiles_dir = "appfiles"
+    downloads_file = os.path.join(appfiles_dir, "downloads.txt")
+    if os.path.exists(downloads_file):
+        with open(downloads_file, "a") as f:
+            f.write(f"{app_id}\n")
+    else:
+        with open(downloads_file, "w") as f:
+            f.write(f"{app_id}\n")
+
     # Create a top-up window for downloading repository
-    print(theurl)
     download_window = ctk.CTkToplevel(app)
     download_window.geometry("400x300")
     download_window.title("Download Repository")
