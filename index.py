@@ -121,7 +121,7 @@ def download_app(app_data):
                 readme_content = response.text
                 
                 # Create a text widget to display README content
-                readme_text = ctk.CTkText(details_frame, wrap=ctk.WORD, height=20, width=70)
+                readme_text = ctk.CTkLabel(details_frame, wrap=ctk.WORD, height=20, width=70)
                 readme_text.pack(side=ctk.TOP, padx=10, pady=5)
                 readme_text.insert(ctk.END, readme_content)
                 readme_text.config(state=ctk.DISABLED)  # Make the text widget read-only
