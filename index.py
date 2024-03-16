@@ -112,15 +112,29 @@ def download_app(app_data):
     # Fetch README content from the repository URL
     repo_url = app_data.get("repo_url", "")
     if repo_url:
-        try:
-            response = requests.get(repo_url + "/blob/main/README.md")
-            response.raise_for_status()
-            readme_content = response.text
-            # Create a label for displaying README content
-            readme_label = ctk.CTkLabel(details_frame, text=readme_content, wraplength=700)
-            readme_label.pack(side=ctk.TOP, padx=10, pady=5)
-        except Exception as e:
-            print(f"Error fetching README content: {e}")
+        branches = ["main", "master"]  # Branches to check
+
+        for branch in branches:
+            try:
+                response = requests.get(f"{repo_url}/raw/{branch}/README.md")
+                response.raise_for_status()
+                readme_content = response.text
+                
+                # Create a text widget to display README content
+                readme_text = ctk.CTkText(details_frame, wrap=ctk.WORD, height=20, width=70)
+                readme_text.pack(side=ctk.TOP, padx=10, pady=5)
+                readme_text.insert(ctk.END, readme_content)
+                readme_text.config(state=ctk.DISABLED)  # Make the text widget read-only
+                
+                break  # Break the loop if README content is successfully fetched
+            except Exception as e:
+                print(f"Error fetching README content for branch {branch}: {e}")
+        else:
+            print("Failed to fetch README content from any branch.")
+    else:
+        print("Repository URL not provided.")
+
+
 
     # Create a button for downloading the application
     download_button = ctk.CTkButton(details_frame, text="Download", command=lambda: download_app(app_data))
