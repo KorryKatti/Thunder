@@ -32,14 +32,17 @@ def main():
     copy_files(update_dir, os.path.dirname(__file__))
 
     # Create virtual environment
-    python_executable = os.path.join(sys.prefix, 'bin' if sys.platform != 'win32' else 'Scripts', 'python')
+    python_executable = sys.executable
     os.system(f"{python_executable} -m venv myenv")
     print("Virtual environment created")
 
-    # Execute shell script to activate environment
-    script_path = os.path.join('appfiles', 'activate_env.sh' if sys.platform != 'win32' else 'activate_env.bat')
-    print("Executing shell script:", script_path)
-    subprocess.run(["bash", script_path])
+    # Activate the virtual environment and execute activation script
+    if sys.platform == "win32":
+        activation_script = os.path.join('myenv', 'Scripts', 'activate.bat')
+        subprocess.run([activation_script], shell=True)
+    else:
+        activation_script = os.path.join('myenv', 'bin', 'activate')
+        subprocess.run(['source', activation_script], shell=True)
 
     # Install requirements
     os.system("pip install -r requirements.txt")
