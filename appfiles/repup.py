@@ -8,6 +8,7 @@ def fetch_data(url):
     response = requests.get(url)
     if response.status_code == 200:
         soup = BeautifulSoup(response.content, 'html.parser')
+        app_id = soup.find('h1', {'id': 'appId'}).text.strip()
         app_name = soup.find('h1', {'id': 'appName'}).text.strip()
         icon_url = soup.find('h2', {'id': 'iconUrl'}).text.strip()
         version = soup.find('h2', {'id': 'version'}).text.strip()
@@ -21,7 +22,8 @@ def fetch_data(url):
             'version': version,
             'repo_url': repo_url,
             'main_file': main_file,
-            'description': description
+            'description': description,
+            'app_id' : app_id
         }
         return application_data
     else:
