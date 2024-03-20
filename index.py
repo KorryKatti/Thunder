@@ -207,9 +207,16 @@ def libmenu_callback(choice):
 
 
 def handle_app_click(app_id):
-    # You can implement the logic to handle the click event for each app button here
-    print(f"Clicked on app with ID: {app_id}")
-    # For now, let's just print the clicked app ID
+    # Construct the directory path for the app
+    app_dir = os.path.join("common", app_id)
+
+    # Check if the thunderenv directory exists in the app directory
+    thunderenv_path = os.path.join(app_dir, "thunderenv")
+    if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
+        print("Yes")
+    else:
+        print("No")
+
 
 # CallBack function for commenu
 def commenu_callback():
