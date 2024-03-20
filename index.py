@@ -168,12 +168,37 @@ def optionmenu_callback(choice):
 # Callback Function for Libmenu
 def libmenu_callback(choice):
     if choice == "Library":
-        # Code to handle the "Library" option
-        pass
+        # Clear the existing widgets in the scrollable frame
+        for widget in scrollable_frame.winfo_children():
+            widget.destroy()
+
+        # Get the list of app IDs and names
+        app_list = []
+        data_dir = "data"
+        for filename in os.listdir(data_dir):
+            if filename.endswith(".json"):
+                try:
+                    with open(os.path.join(data_dir, filename), "r") as f:
+                        app_data = json.load(f)
+                        app_id = app_data.get("app_id", "")
+                        app_name = app_data.get("app_name", "")
+                        app_list.append((app_id, app_name))
+                except Exception as e:
+                    print(f"Error processing JSON file {filename}: {e}")
+
+        # Display the list of app IDs and names in the scrollable frame
+        for app_id, app_name in app_list:
+            app_button = ctk.CTkButton(scrollable_frame, text=f"{app_id}_{app_name}", command=lambda id=app_id: handle_app_click(id))
+            app_button.pack(fill=ctk.NONE, padx=10, pady=(50, 10), anchor="w")
+
     elif choice == "Apps Update":
         # Code to handle the "Apps Update" option
         pass
 
+def handle_app_click(app_id):
+    # You can implement the logic to handle the click event for each app button here
+    print(f"Clicked on app with ID: {app_id}")
+    # For now, let's just print the clicked app ID
 
 # CallBack function for commenu
 def commenu_callback():
