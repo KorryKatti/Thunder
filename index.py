@@ -182,18 +182,29 @@ def libmenu_callback(choice):
                         app_data = json.load(f)
                         app_id = app_data.get("app_id", "")
                         app_name = app_data.get("app_name", "")
-                        app_list.append((app_id, app_name))
+
+                        # Check if the app ID exists in downloads.txt
+                        downloads_file = os.path.join("appfiles", "downloads.txt")
+                        if os.path.exists(downloads_file):
+                            with open(downloads_file, "r") as downloads:
+                                if app_id.strip() in downloads.read().splitlines():
+                                    app_list.append(f"{app_id}_{app_name}")
                 except Exception as e:
                     print(f"Error processing JSON file {filename}: {e}")
 
         # Display the list of app IDs and names in the scrollable frame
-        for app_id, app_name in app_list:
-            app_button = ctk.CTkButton(scrollable_frame, text=f"{app_id}_{app_name}", command=lambda id=app_id: handle_app_click(id))
-            app_button.pack(fill=ctk.NONE, padx=10, pady=(50, 10), anchor="w")
-
+        if app_list:
+            for app_entry in app_list:
+                app_button = ctk.CTkButton(scrollable_frame, text=app_entry, command=lambda app=app_entry: handle_app_click(app))
+                app_button.pack(fill=ctk.NONE, padx=10, pady=(50, 5), anchor="w")
+        else:
+            # Display a message if no apps are available
+            no_apps_label = ctk.CTkLabel(scrollable_frame, text="Download some apps first silly")
+            no_apps_label.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
     elif choice == "Apps Update":
         # Code to handle the "Apps Update" option
         pass
+
 
 def handle_app_click(app_id):
     # You can implement the logic to handle the click event for each app button here
