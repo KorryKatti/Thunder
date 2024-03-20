@@ -2,6 +2,7 @@ import customtkinter as ctk
 import subprocess
 import os
 import json
+import venv
 import requests
 from PIL import Image
 from io import BytesIO
@@ -205,7 +206,11 @@ def libmenu_callback(choice):
         # Code to handle the "Apps Update" option
         pass
 
+def cherry():
+    # i am running out of names , this function displays the app data finally
+    print("cherry cherry lady")
 
+# what to do when library app is clicked , makes virtual env if making for the first time
 def handle_app_click(app_id):
     # Construct the directory path for the app
     app_dir = os.path.join("common", app_id)
@@ -216,6 +221,14 @@ def handle_app_click(app_id):
         print("Yes")
     else:
         print("No")
+        # Create a virtual environment named "thunderenv" in the app's folder
+        try:
+            venv.create(thunderenv_path, with_pip=True)
+            print("Virtual environment created successfully.")
+        except Exception as e:
+            print(f"Error creating virtual environment: {e}")
+
+    cherry()
 
 
 # CallBack function for commenu
