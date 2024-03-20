@@ -166,8 +166,14 @@ def optionmenu_callback(choice):
         subprocess.Popen(["python", "updater.py"])  # Run updater.py
 
 # Callback Function for Libmenu
-def libmenu_callback():
-    pass
+def libmenu_callback(choice):
+    if choice == "Library":
+        # Code to handle the "Library" option
+        pass
+    elif choice == "Apps Update":
+        # Code to handle the "Apps Update" option
+        pass
+
 
 # CallBack function for commenu
 def commenu_callback():
