@@ -10,4 +10,5 @@ packaging==24.0
 pillow==10.2.0
 requests==2.31.0
 soupsieve==2.5
+tkinterhtml
 urllib3==2.2.1
