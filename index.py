@@ -212,16 +212,6 @@ def cherry():
     cherry_frame = ctk.CTkFrame(scrollable_frame, width=400, height=400, bg_color="white")
     cherry_frame.pack(side=ctk.RIGHT, fill=ctk.BOTH, padx=10, pady=10)
 
-    # Load the thunder.gif image
-    try:
-        image_path = "appfiles/thunder.gif"
-        thunder_image = Image.open(image_path)
-        thunder_ctk_image = ctk.CTkImage(light_image=thunder_image, dark_image=thunder_image)
-        thunder_label = ctk.CTkLabel(cherry_frame, image=thunder_ctk_image)
-        thunder_label.pack(expand=True)
-    except Exception as e:
-        print(f"Error loading thunder.gif: {e}")
-
 
 # what to do when library app is clicked , makes virtual env if making for the first time
 def handle_app_click(app_id):
