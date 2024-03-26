@@ -5,6 +5,7 @@ import json
 import venv
 import requests
 from PIL import Image
+import webview
 from io import BytesIO
 import markdown
 from tkinterhtml import HtmlFrame
@@ -235,8 +236,15 @@ def handle_app_click(app_id):
 
 
 # CallBack function for commenu
-def commenu_callback():
-    pass
+def commenu_callback(choice):
+    if choice == "Community":
+        # Create a GUI window to view the HTML content
+        webview.create_window('example', 'http://example.com')
+        webview.start()
+    elif choice == "Image Board":
+        pass  # Placeholder for Image Board option logic
+    elif choice == "Thunder Halls":
+        pass  # Placeholder for Thunder Halls option logic
 
 # CallBack function for devmenu
 def devmenu_callback():
