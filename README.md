@@ -13,3 +13,8 @@ then activate `myenv` virtual env depending on your os ,for linux it is ```sourc
 https://github.com/KorryKatti/Thunder/
 
 also before running anything run ```pip install -r requirements.txt```
+
+
+arch linux 
+
+yay -S python-gobject python-gobject-cairo gtk3 webkit2gtk
