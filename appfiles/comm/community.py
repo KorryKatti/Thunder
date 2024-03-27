@@ -1,13 +1,21 @@
-# Import tkinter and webview libraries 
-from tkinter import *
-import webview 
+import sys
+from PyQt5.QtCore import QUrl
+from PyQt5.QtWidgets import QApplication, QMainWindow
+from PyQt5.QtWebEngineWidgets import QWebEngineView
 
-# define an instance of tkinter 
-tk = Tk() 
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Embedded Web Page")
+        
+        self.browser = QWebEngineView()
+        self.setCentralWidget(self.browser)
+        
+        # Load URL
+        self.browser.setUrl(QUrl('https://www.example.com'))
 
-# size of the window where we show our website 
-tk.geometry("800x450") 
-
-# Open website 
-webview.create_window('Geeks for Geeks', 'https://geeksforgeeks.org') 
-webview.start() 
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())

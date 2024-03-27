@@ -16,3 +16,5 @@ urllib3==2.2.1
 cefpython3
 pygtk 
 webkit
+PyQtWebEngine
+PyQt5
