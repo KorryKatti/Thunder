@@ -18,3 +18,8 @@ also before running anything run ```pip install -r requirements.txt```
 arch linux 
 
 yay -S python-gobject python-gobject-cairo gtk3 webkit2gtk
+
+yay -S python-pyqt5 qt5-webengine
+
+yay -S python-gobject python-gobject-cairo gtk3 webkit2gtk
+
