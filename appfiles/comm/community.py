@@ -7,12 +7,14 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Embedded Web Page")
+        self.setGeometry(100, 100, 800, 600)
         
         self.browser = QWebEngineView()
         self.setCentralWidget(self.browser)
         
         # Load URL
-        self.browser.setUrl(QUrl('https://www.example.com'))
+        url = QUrl("https://www.wikipedia.org")
+        self.browser.setUrl(url)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
