@@ -252,15 +252,19 @@ def handle_app_click(app_id):
         # Check if the thunderenv directory exists in the app directory
         thunderenv_path = os.path.join(app_dir, "thunderenv")
         if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
-            print("Yes")
+            print("Thunder environment found.")
         else:
-            print("No")
+            print("Creating Thunder environment...")
             # Create a virtual environment named "thunderenv" in the app's folder
             try:
                 venv.create(thunderenv_path, with_pip=True)
                 print("Virtual environment created successfully.")
             except Exception as e:
                 print(f"Error creating virtual environment: {e}")
+
+        # Get app_data from the JSON file
+        with open(os.path.join("data", f"{numeric_app_id}.json"), "r") as f:
+            app_data = json.load(f)
 
         # Function to start the app
         def start_app():
@@ -269,7 +273,11 @@ def handle_app_click(app_id):
                 app_name = app_id.split('_')[-1]
 
                 # Construct the path to the main file
-                main_file_path = os.path.join(app_dir, app_name + ".py")
+                main_file_name = app_data.get("main_file", "main.py")
+                main_file_path = os.path.join(app_dir, main_file_name)
+
+                # Debug line to print the path where the script is looking for the main file
+                print("Looking for main file at:", main_file_path)
 
                 # Check if the main file exists and if it's a Python file
                 if os.path.exists(main_file_path) and main_file_path.endswith(".py"):
@@ -308,6 +316,9 @@ def handle_app_click(app_id):
         cherry(start_app, uninstall_app)
     except Exception as e:
         print(f"Error handling app click: {e}")
+
+
+
 
 
     
