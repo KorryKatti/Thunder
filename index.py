@@ -255,12 +255,13 @@ def handle_app_click(app_id):
             # Remove app ID from downloads.txt
             downloads_file = os.path.join("appfiles", "downloads.txt")
             if os.path.exists(downloads_file):
-                with open(downloads_file, "r") as f:
+                with open(downloads_file, "r+") as f:
                     lines = f.readlines()
-                with open(downloads_file, "w") as f:
+                    f.seek(0)
                     for line in lines:
                         if not line.strip().startswith(app_id):
                             f.write(line)
+                    f.truncate()
             else:
                 print("downloads.txt not found.")
 
@@ -269,10 +270,7 @@ def handle_app_click(app_id):
 
     # Call cherry() with start and uninstall commands
     cherry(start_app, uninstall_app)
-
-
-
-
+    
 # CallBack function for commenu
 def commenu_callback(choice):
     if choice == "Community":
