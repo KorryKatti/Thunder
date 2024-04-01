@@ -49,7 +49,7 @@ def check_for_updates():
 def main():
     while True:
         check_for_updates()
-        time.sleep(60)  # Check for updates every one minute
+        time.sleep(600)  # Check for updates every one minute
 
 if __name__ == "__main__":
     main()
