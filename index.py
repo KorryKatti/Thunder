@@ -250,18 +250,23 @@ def handle_app_click(app_id):
         # Delete the directory corresponding to the app
         try:
             shutil.rmtree(app_dir)
-            print("App uninstalled successfully.")
+            print("App directory deleted successfully:", app_dir)
             
             # Remove app ID from downloads.txt
             downloads_file = os.path.join("appfiles", "downloads.txt")
             if os.path.exists(downloads_file):
-                with open(downloads_file, "r+") as f:
+                print("downloads.txt exists.")
+                with open(downloads_file, "r") as f:
                     lines = f.readlines()
-                    f.seek(0)
+
+                with open(downloads_file, "w") as f:
                     for line in lines:
                         if not line.strip().startswith(app_id):
                             f.write(line)
-                    f.truncate()
+                            print("App ID kept in downloads.txt:", line.strip())
+                        else:
+                            print("App ID removed from downloads.txt:", line.strip())
+
             else:
                 print("downloads.txt not found.")
 
@@ -270,6 +275,8 @@ def handle_app_click(app_id):
 
     # Call cherry() with start and uninstall commands
     cherry(start_app, uninstall_app)
+
+
     
 # CallBack function for commenu
 def commenu_callback(choice):
