@@ -4,6 +4,7 @@ import os
 import json
 import shutil
 import venv
+import re
 import requests
 from PIL import Image
 import webview
@@ -223,58 +224,74 @@ def cherry(start_command, uninstall_command):
     uninstall_button.pack(side=ctk.TOP, padx=10, pady=5)
 
 
+import os
+import re
+import shutil
+
+def remove_word_from_file(filename, word_to_remove):
+    try:
+        # Read the content of the file, remove the word, and write back
+        with open(filename, 'r') as file:
+            lines = [line.strip() for line in file if line.strip() != word_to_remove]
+
+        with open(filename, 'w') as file:
+            file.write('\n'.join(lines))
+        
+        print(f"Word '{word_to_remove}' removed from {filename} successfully.")
+    except FileNotFoundError:
+        print(f"Error: {filename} not found.")
+    except Exception as e:
+        print(f"Error removing word from {filename}: {e}")
+
 def handle_app_click(app_id):
-    # Construct the directory path for the app
-    app_dir = os.path.join("common", app_id)
+    try:
+        # Extract only the numeric part from app_id
+        numeric_app_id = re.sub(r'\D*(\d{5}).*', r'\1', app_id)
 
-    # Check if the thunderenv directory exists in the app directory
-    thunderenv_path = os.path.join(app_dir, "thunderenv")
-    if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
-        print("Yes")
-    else:
-        print("No")
-        # Create a virtual environment named "thunderenv" in the app's folder
-        try:
-            venv.create(thunderenv_path, with_pip=True)
-            print("Virtual environment created successfully.")
-        except Exception as e:
-            print(f"Error creating virtual environment: {e}")
+        # Construct the directory path for the app
+        app_dir = os.path.join("common", app_id)
+        
+        # Check if the thunderenv directory exists in the app directory
+        thunderenv_path = os.path.join(app_dir, "thunderenv")
+        if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
+            print("Yes")
+        else:
+            print("No")
+            # Create a virtual environment named "thunderenv" in the app's folder
+            try:
+                venv.create(thunderenv_path, with_pip=True)
+                print("Virtual environment created successfully.")
+            except Exception as e:
+                print(f"Error creating virtual environment: {e}")
 
-    # Function to start the app
-    def start_app():
-        # Add your logic here to start the app
-        print("Starting the app...")
+        # Function to start the app
+        def start_app():
+            # Add your logic here to start the app
+            print("Starting the app...")
 
-    # Function to uninstall the app
-    def uninstall_app():
-        # Delete the directory corresponding to the app
-        try:
-            shutil.rmtree(app_dir)
-            print("App directory deleted successfully:", app_dir)
-            
-            # Remove app ID from downloads.txt
-            downloads_file = os.path.join("appfiles", "downloads.txt")
-            if os.path.exists(downloads_file):
-                print("downloads.txt exists.")
-                with open(downloads_file, "r") as f:
-                    lines = f.readlines()
+        # Function to uninstall the app
+        def uninstall_app():
+            # Delete the directory corresponding to the app
+            try:
+                shutil.rmtree(app_dir)
+                print("App directory deleted successfully:", app_dir)
+                
+                # Remove app ID from downloads.txt
+                downloads_file = os.path.join("appfiles", "downloads.txt")
+                if os.path.exists(downloads_file):
+                    print("downloads.txt exists.")
+                    remove_word_from_file(downloads_file, numeric_app_id)
+                else:
+                    print("downloads.txt not found.")
+            except FileNotFoundError:
+                print(f"Error: {app_dir} not found.")
+            except Exception as e:
+                print(f"Error uninstalling the app: {e}")
 
-                with open(downloads_file, "w") as f:
-                    for line in lines:
-                        if not line.strip().startswith(app_id):
-                            f.write(line)
-                            print("App ID kept in downloads.txt:", line.strip())
-                        else:
-                            print("App ID removed from downloads.txt:", line.strip())
-
-            else:
-                print("downloads.txt not found.")
-
-        except Exception as e:
-            print(f"Error uninstalling the app: {e}")
-
-    # Call cherry() with start and uninstall commands
-    cherry(start_app, uninstall_app)
+        # Call cherry() with start and uninstall commands
+        cherry(start_app, uninstall_app)
+    except Exception as e:
+        print(f"Error handling app click: {e}")
 
 
     
