@@ -2,6 +2,7 @@ import customtkinter as ctk
 import subprocess
 import os
 import json
+import platform
 import shutil
 import venv
 import re
@@ -224,9 +225,6 @@ def cherry(start_command, uninstall_command):
     uninstall_button.pack(side=ctk.TOP, padx=10, pady=5)
 
 
-import os
-import re
-import shutil
 
 def remove_word_from_file(filename, word_to_remove):
     try:
@@ -266,8 +264,26 @@ def handle_app_click(app_id):
 
         # Function to start the app
         def start_app():
-            # Add your logic here to start the app
-            print("Starting the app...")
+            try:
+                # Extract app_name from app_id
+                app_name = app_id.split('_')[-1]
+
+                # Construct the path to the main file
+                main_file_path = os.path.join(app_dir, app_name + ".py")
+
+                # Check if the main file exists and if it's a Python file
+                if os.path.exists(main_file_path) and main_file_path.endswith(".py"):
+                    # Activate the virtual environment
+                    activate_env = os.path.join(thunderenv_path, "Scripts", "activate") if platform.system() == "Windows" else os.path.join(thunderenv_path, "bin", "activate")
+                    subprocess.Popen(["cmd.exe", "/K", activate_env]) if platform.system() == "Windows" else subprocess.Popen(["/bin/bash", "-c", f"source {activate_env}"])
+
+                    # Run the main file inside the virtual environment
+                    subprocess.Popen(["python", main_file_path])
+                    print("App started successfully.")
+                else:
+                    print("Error: Main file not found or not a Python file.")
+            except Exception as e:
+                print(f"Error starting the app: {e}")
 
         # Function to uninstall the app
         def uninstall_app():
