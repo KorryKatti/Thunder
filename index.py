@@ -252,9 +252,9 @@ def handle_app_click(app_id):
         # Check if the thunderenv directory exists in the app directory
         thunderenv_path = os.path.join(app_dir, "thunderenv")
         if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
-            print("Thunder environment found.")
+            print("Thunderenv found.")
         else:
-            print("Creating Thunder environment...")
+            print("Thunderenv not found.")
             # Create a virtual environment named "thunderenv" in the app's folder
             try:
                 venv.create(thunderenv_path, with_pip=True)
@@ -262,34 +262,30 @@ def handle_app_click(app_id):
             except Exception as e:
                 print(f"Error creating virtual environment: {e}")
 
-        # Get app_data from the JSON file
-        with open(os.path.join("data", f"{numeric_app_id}.json"), "r") as f:
-            app_data = json.load(f)
-
         # Function to start the app
         def start_app():
             try:
-                # Extract app_name from app_id
-                app_name = app_id.split('_')[-1]
+                # Check if the thunderenv directory exists in the app directory
+                thunderenv_path = os.path.join(app_dir, "thunderenv")
+                if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
+                    print("Thunderenv found. Starting the app...")
 
-                # Construct the path to the main file
-                main_file_name = app_data.get("main_file", "main.py")
-                main_file_path = os.path.join(app_dir, main_file_name)
+                    # Install requirements from requirements.txt if exists
+                    requirements_file = os.path.join(app_dir, "requirements.txt")
+                    if os.path.exists(requirements_file):
+                        print("Installing requirements from requirements.txt...")
+                        subprocess.run([os.path.join(thunderenv_path, "bin", "pip"), "install", "-r", requirements_file])
+                        print("Requirements installed successfully.")
 
-                # Debug line to print the path where the script is looking for the main file
-                print("Looking for main file at:", main_file_path)
-
-                # Check if the main file exists and if it's a Python file
-                if os.path.exists(main_file_path) and main_file_path.endswith(".py"):
-                    # Activate the virtual environment
-                    activate_env = os.path.join(thunderenv_path, "Scripts", "activate") if platform.system() == "Windows" else os.path.join(thunderenv_path, "bin", "activate")
-                    subprocess.Popen(["cmd.exe", "/K", activate_env]) if platform.system() == "Windows" else subprocess.Popen(["/bin/bash", "-c", f"source {activate_env}"])
-
-                    # Run the main file inside the virtual environment
-                    subprocess.Popen(["python", main_file_path])
-                    print("App started successfully.")
+                    # Launch the main file of the app
+                    main_file = os.path.join(app_dir, "main.py")
+                    if os.path.exists(main_file):
+                        print("Launching the app...")
+                        subprocess.run([os.path.join(thunderenv_path, "bin", "python"), main_file])
+                    else:
+                        print("Main file not found.")
                 else:
-                    print("Error: Main file not found or not a Python file.")
+                    print("Thunderenv not found.")
             except Exception as e:
                 print(f"Error starting the app: {e}")
 
@@ -316,10 +312,6 @@ def handle_app_click(app_id):
         cherry(start_app, uninstall_app)
     except Exception as e:
         print(f"Error handling app click: {e}")
-
-
-
-
 
     
 # CallBack function for commenu
