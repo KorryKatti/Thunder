@@ -2,6 +2,7 @@ import customtkinter as ctk
 import subprocess
 import os
 import json
+import shutil
 import venv
 import requests
 from PIL import Image
@@ -208,13 +209,20 @@ def libmenu_callback(choice):
         pass
 
     # i am running out of names , this function displays the app data finally
-def cherry():
+def cherry(start_command, uninstall_command):
     # Create a new frame for displaying additional data
     cherry_frame = ctk.CTkFrame(scrollable_frame, width=400, height=400, bg_color="white")
     cherry_frame.pack(side=ctk.RIGHT, fill=ctk.BOTH, padx=10, pady=10)
 
+    # Create a button to start the app
+    start_button = ctk.CTkButton(cherry_frame, text="Start", command=start_command)
+    start_button.pack(side=ctk.TOP, padx=10, pady=5)
 
-# what to do when library app is clicked , makes virtual env if making for the first time
+    # Create a button to uninstall the app
+    uninstall_button = ctk.CTkButton(cherry_frame, text="Uninstall", command=uninstall_command)
+    uninstall_button.pack(side=ctk.TOP, padx=10, pady=5)
+
+
 def handle_app_click(app_id):
     # Construct the directory path for the app
     app_dir = os.path.join("common", app_id)
@@ -232,7 +240,37 @@ def handle_app_click(app_id):
         except Exception as e:
             print(f"Error creating virtual environment: {e}")
 
-    cherry()
+    # Function to start the app
+    def start_app():
+        # Add your logic here to start the app
+        print("Starting the app...")
+
+    # Function to uninstall the app
+    def uninstall_app():
+        # Delete the directory corresponding to the app
+        try:
+            shutil.rmtree(app_dir)
+            print("App uninstalled successfully.")
+            
+            # Remove app ID from downloads.txt
+            downloads_file = os.path.join("appfiles", "downloads.txt")
+            if os.path.exists(downloads_file):
+                with open(downloads_file, "r") as f:
+                    lines = f.readlines()
+                with open(downloads_file, "w") as f:
+                    for line in lines:
+                        if not line.strip().startswith(app_id):
+                            f.write(line)
+            else:
+                print("downloads.txt not found.")
+
+        except Exception as e:
+            print(f"Error uninstalling the app: {e}")
+
+    # Call cherry() with start and uninstall commands
+    cherry(start_app, uninstall_app)
+
+
 
 
 # CallBack function for commenu
