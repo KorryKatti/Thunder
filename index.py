@@ -40,9 +40,12 @@ def download_image(url):
 
 # Function to create labels for each application data
 # Function to create labels for each application data
+# Function to create labels for each application data
 def create_labels():
     data_dir = "data"
-    for filename in os.listdir(data_dir):
+    # Get the list of filenames and sort them
+    filenames = sorted(os.listdir(data_dir) , reverse=True)
+    for filename in filenames:
         if filename.endswith(".json"):
             try:
                 with open(os.path.join(data_dir, filename), "r") as f:
