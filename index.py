@@ -324,15 +324,17 @@ def handle_app_click(app_id):
     except Exception as e:
         print(f"Error handling app click: {e}")
 
-    
+
+import webbrowser
+
 # CallBack function for commenu
 def commenu_callback(choice):
     if choice == "Community":
-        pass
+        webbrowser.open("http://korrykatti.github.io/others/thunder/community.html")
     elif choice == "Image Board":
-        pass  # Placeholder for Image Board option logic
+        webbrowser.open("http://korrykatti.github.io/others/thunder/image.html")
     elif choice == "Thunder Halls":
-        pass  # Placeholder for Thunder Halls option logic
+        webbrowser.open("http://korrykatti.github.io/others/thunder/halls.html")
 
 # CallBack function for devmenu
 def devmenu_callback():
