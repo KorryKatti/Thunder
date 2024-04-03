@@ -168,7 +168,7 @@ def optionmenu_callback(choice):
         create_labels()
     elif choice == "Client Update":
         app.destroy()  # Close the current window
-        subprocess.Popen(["python", "updater.py"])  # Run updater.py
+        subprocess.Popen(["python", "main.py"])  # Run main.py
 
 # Callback Function for Libmenu
 def libmenu_callback(choice):

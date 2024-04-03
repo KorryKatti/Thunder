@@ -23,3 +23,8 @@ yay -S python-pyqt5 qt5-webengine
 
 yay -S python-gobject python-gobject-cairo gtk3 webkit2gtk
 
+sudo pacman -S base-devel
+
+sudo pacman -S python-gobject python-cairo gtk3 webkit2gtk
+
+
