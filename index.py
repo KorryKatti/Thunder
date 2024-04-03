@@ -246,6 +246,16 @@ def handle_app_click(app_id):
         # Extract only the numeric part from app_id
         numeric_app_id = re.sub(r'\D*(\d{5}).*', r'\1', app_id)
 
+        # Load the app data from the JSON file in the data folder
+        data_dir = "data"
+        json_file_path = os.path.join(data_dir, f"{numeric_app_id}.json")
+        if not os.path.exists(json_file_path):
+            print(f"Error: JSON file for app {app_id} not found.")
+            return
+
+        with open(json_file_path) as json_file:
+            app_data = json.load(json_file)
+
         # Construct the directory path for the app
         app_dir = os.path.join("common", app_id)
         
@@ -266,7 +276,6 @@ def handle_app_click(app_id):
         def start_app():
             try:
                 # Check if the thunderenv directory exists in the app directory
-                thunderenv_path = os.path.join(app_dir, "thunderenv")
                 if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
                     print("Thunderenv found. Starting the app...")
 
@@ -277,8 +286,10 @@ def handle_app_click(app_id):
                         subprocess.run([os.path.join(thunderenv_path, "bin", "pip"), "install", "-r", requirements_file])
                         print("Requirements installed successfully.")
 
-                    # Launch the main file of the app
-                    main_file = os.path.join(app_dir, "main.py")
+                    # Get the main file path from the app's JSON file
+                    main_file_name = app_data.get("main_file", "")
+                    main_file = os.path.join(app_dir, main_file_name)
+
                     if os.path.exists(main_file):
                         print("Launching the app...")
                         subprocess.run([os.path.join(thunderenv_path, "bin", "python"), main_file])
