@@ -394,6 +394,23 @@ def download_repo(repo_url, app_id, app_name):
     # Schedule the close_window function to be called after 3 seconds
     download_window.after(3000, close_window)    
 
+    # Callback function for the pause button
+    def pause_download():
+        print("Download paused")
+
+    # Callback function for the play button
+    def resume_download():
+        print("Download resumed")
+
+    # Create a button to pause the download
+    pause_button = ctk.CTkButton(download_window, text="Pause", command=pause_download)
+    pause_button.pack(side=ctk.LEFT, padx=10, pady=5)
+
+    # Create a button to resume the download
+    play_button = ctk.CTkButton(download_window, text="Play", command=resume_download)
+    play_button.pack(side=ctk.LEFT, padx=10, pady=5)
+
+
 # Create a frame inside the main window for organizing widgets
 frame = ctk.CTkFrame(app)
 frame.pack(fill=ctk.BOTH, expand=True, padx=20, pady=20)  # Pack the frame to fill the window
