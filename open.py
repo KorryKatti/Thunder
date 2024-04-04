@@ -1,51 +1,53 @@
 import os
 import subprocess
-import platform
+import sys
 
-def check_virtualenv(env_name):
-    return os.path.exists(os.path.join(env_name, 'bin', 'activate'))
+# Function to check if a directory exists
+def directory_exists(directory):
+    return os.path.exists(directory)
 
-def create_virtualenv(env_name):
-    subprocess.run(['python', '-m', 'venv', env_name])
+# Function to create a virtual environment
+def create_venv(directory):
+    os.system(f"{sys.executable} -m venv {directory}")
 
-def activate_virtualenv(env_name):
-    if platform.system() == 'Windows':
-        activate_cmd = os.path.join(env_name, 'Scripts', 'activate')
-        subprocess.run(f'call {activate_cmd}', shell=True)
-    else:
-        activate_cmd = os.path.join(env_name, 'bin', 'activate')
-        subprocess.run(f'source {activate_cmd}', shell=True)
+# Function to install customtkinter (assuming it's a package)
+def install_customtkinter(venv_directory):
+    os.system(f"{os.path.join(venv_directory, 'bin', 'python')} -m pip install customtkinter")
 
-def check_customtkinter_exists(env_name):
-    try:
-        subprocess.run(['python', '-m', 'pip', 'list', '--format=columns'], check=True)
-        pip_list_output = subprocess.check_output(['python', '-m', 'pip', 'list'], universal_newlines=True)
-        return 'customtkinter' in pip_list_output
-    except subprocess.CalledProcessError:
-        return False
+# Function to activate the virtual environment
+def activate_venv(directory):
+    activate_script = os.path.join(directory, "bin", "activate")
+    return f"source {activate_script}"
 
-def install_customtkinter(env_name):
-    print("Installing customtkinter...")
-    subprocess.run(['python', '-m', 'pip', 'install', 'customtkinter'])
+# Function to run main.py using the Python interpreter from the virtual environment
+def run_main_py(venv_directory):
+    python_executable = os.path.join(venv_directory, "bin", "python")
+    main_script = "main.py"
+    subprocess.run([python_executable, main_script])
 
-def run_main():
-    subprocess.run(['python', 'main.py'])
+# Function to run updater.py using the Python interpreter from the virtual environment
+def run_updater_py(venv_directory):
+    python_executable = os.path.join(venv_directory, "bin", "python")
+    updater_script = "updater.py"
+    subprocess.run([python_executable, updater_script])
 
 def main():
-    env_name = "myenv"
+    venv_directory = "myenv"
 
-    if not check_virtualenv(env_name):
-        print(f"Creating virtual environment '{env_name}'...")
-        create_virtualenv(env_name)
-        print("Virtual environment created.")
+    if not directory_exists(venv_directory):
+        create_venv(venv_directory)
 
-    activate_virtualenv(env_name)
+    # Check if customtkinter is installed
+    customtkinter_installed = os.system(f"{os.path.join(venv_directory, 'bin', 'python')} -c 'import customtkinter'") == 0
 
-    if not check_customtkinter_exists(env_name):
-        install_customtkinter(env_name)
-
-    # Now we can proceed with running main.py
-    run_main()
+    if customtkinter_installed:
+        install_customtkinter(venv_directory)
+        # Activate the virtual environment and run main.py
+        activate_command = activate_venv(venv_directory)
+        subprocess.run(f"{activate_command} && python main.py", shell=True)
+    else:
+        # Run updater.py
+        run_updater_py(venv_directory)
 
 if __name__ == "__main__":
     main()
