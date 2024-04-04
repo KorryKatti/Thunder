@@ -19,5 +19,6 @@ PyQt5
 tkhtmlview
 tkinterweb
 PyGObject
+playsound
 
 
