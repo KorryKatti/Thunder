@@ -1,30 +1,35 @@
-# Thunder
-i think i am up to something
+# Thunder - Python Package Management and Distribution Platform
 
-[ first time using virtual env , idk how it is done]
+Thunder is an open-source platform designed to provide a streamlined experience for managing and distributing Python packages. Similar to popular platforms like Steam, Thunder allows users to upload their Python applications, which can then be downloaded and installed by other users seamlessly. Thunder also includes automatic updates for the applications hosted on the platform and handles all the installation requirements for each application.
 
-if testing it , launch main.py
+## Features
 
-to test the updater , go to config.json and change the 0.0.0 to any number you like ( eg 4.2.0) and then start the program
+- **Upload Applications**: Developers can easily upload their Python applications to the Thunder platform for distribution.
+- **Download Applications**: Users can browse and download Python applications from the Thunder platform.
+- **Automatic Updates**: Applications hosted on Thunder receive automatic updates, ensuring users always have the latest versions.
+- **Dependency Management**: Thunder handles all the installation requirements and dependencies for each application, simplifying the installation process for users.
 
-also do `python -m venv myenv`
-then activate `myenv` virtual env depending on your os ,for linux it is ```source myenv/bin/activate```
+## Installation
 
-https://github.com/KorryKatti/Thunder/
+Currently, Thunder is under development and not yet available for public use. Stay tuned for updates on how to install and use Thunder once it's ready for deployment.
 
-also before running anything run ```pip install -r requirements.txt```
+## Documentation
 
+Explore the [documentation](https://example.com) for Thunder to learn more about its features and usage.
 
-arch linux 
+## Contributing
 
-yay -S python-gobject python-gobject-cairo gtk3 webkit2gtk
+Thunder is an open-source project, and contributions are welcome! If you're interested in contributing to Thunder, please follow these steps:
 
-yay -S python-pyqt5 qt5-webengine
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and ensure all tests pass.
+4. Submit a pull request detailing your changes.
 
-yay -S python-gobject python-gobject-cairo gtk3 webkit2gtk
+## Reporting Issues
 
-sudo pacman -S base-devel
+If you encounter any bugs or issues while using Thunder, please report them by opening a GitHub issue in the repository. Be sure to include detailed information about the problem and steps to reproduce it.
 
-sudo pacman -S python-gobject python-cairo gtk3 webkit2gtk
+## License
 
-
+Thunder is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
