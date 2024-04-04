@@ -14,7 +14,6 @@ soupsieve==2.5
 tkinterhtml
 urllib3==2.2.1
 cefpython3 
-webkit
 PyQtWebEngine
 PyQt5
 tkhtmlview
