@@ -13,8 +13,7 @@ requests==2.31.0
 soupsieve==2.5
 tkinterhtml
 urllib3==2.2.1
-cefpython3
-pygtk 
+cefpython3 
 webkit
 PyQtWebEngine
 PyQt5
