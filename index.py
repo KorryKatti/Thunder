@@ -2,7 +2,6 @@ import customtkinter as ctk
 import subprocess
 import threading
 import time
-from playsound import playsound
 import os
 import json
 import platform
@@ -345,13 +344,12 @@ def commenu_callback(choice):
 # CallBack function for devmenu
 def devmenu_callback():
     pass
+
+
 #mozart from
 # https://freemusicarchive.org/music/Brendan_Kinsella/Mozarts_Piano_Sonata_in_B-flat_Major/Mozart_-_Piano_Sonata_in_B-flat_major_III_Allegretto_Grazioso/
+# Define the function to start playing the music after 11 seconds
 
-
-#functions for optionmenu
-def quit(window):
-    window.destroy()    
 
 def download_repo(repo_url, app_id, app_name):
     # Construct filename
@@ -393,28 +391,12 @@ def download_repo(repo_url, app_id, app_name):
     progress_bar.pack(padx=20, pady=10)
     progress_bar.start()  # Start the progress bar animation   
 
-    # Function to close the top-up window after 3 seconds
+    # Function to close the top-up window
     def close_window():
         download_window.destroy()
 
-    # Schedule the close_window function to be called after 3 seconds
-    download_window.after(3000, close_window)    
-
-    # Callback function for the pause button
-    def pause_download():
-        print("Download paused")
-
-    # Callback function for the play button
-    def resume_download():
-        print("Download resumed")
-
-    # Create a button to pause the download
-    pause_button = ctk.CTkButton(download_window, text="Pause", command=pause_download)
-    pause_button.pack(side=ctk.LEFT, padx=10, pady=5)
-
-    # Create a button to resume the download
-    play_button = ctk.CTkButton(download_window, text="Play", command=resume_download)
-    play_button.pack(side=ctk.LEFT, padx=10, pady=5)
+    # Close the top-up window after 3 seconds
+    download_window.after(3000, close_window)
 
 
 # Create a frame inside the main window for organizing widgets

@@ -20,5 +20,5 @@ tkhtmlview
 tkinterweb
 PyGObject
 playsound
-
+pygame
 
