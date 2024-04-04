@@ -42,7 +42,9 @@ def main():
         subprocess.run([activation_script], shell=True)
     else:
         activation_script = os.path.join('myenv', 'bin', 'activate')
-        subprocess.run(['source', activation_script], shell=True)
+        activate_command = f"source {activation_script} && pip install -r requirements.txt"
+        os.system(activate_command)
+
 
     # Install requirements
     os.system("pip install -r requirements.txt")
