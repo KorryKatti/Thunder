@@ -31,21 +31,6 @@ def main():
     # Copy files from update to the current directory
     copy_files(update_dir, os.path.dirname(__file__))
 
-    # Create virtual environment
-    python_executable = sys.executable
-    os.system(f"{python_executable} -m venv myenv")
-    print("Virtual environment created")
-
-    # Activate the virtual environment and execute activation script
-    if sys.platform == "win32":
-        activation_script = os.path.join('myenv', 'Scripts', 'activate.bat')
-        subprocess.run([activation_script], shell=True)
-    else:
-        activation_script = os.path.join('myenv', 'bin', 'activate')
-        activate_command = f"source {activation_script} && pip install -r requirements.txt"
-        os.system(activate_command)
-
-
     # Install requirements
     os.system("pip install -r requirements.txt")
 
