@@ -1,10 +1,3 @@
-
-def activate_virtualenv():
-    if os.name == 'posix':  # Unix-like OS (Linux/Mac)
-        subprocess.run(["/bin/bash", "-c", "source myenv/bin/activate"], shell=True)
-    elif os.name == 'nt':   # Windows
-        subprocess.run(["myenv\\Scripts\\activate.bat"], shell=True)
-
 import json
 import requests
 import customtkinter as ctk
@@ -12,8 +5,6 @@ from bs4 import BeautifulSoup
 import subprocess
 import os
 import shutil
-
-
 
 def read_version():
     with open('config.json', 'r') as f:
@@ -35,8 +26,6 @@ def close_window(window):
     window.destroy()
 
 def compare_versions():
-    activate_virtualenv()
-    
     # Delete the "update" folder if it exists
     update_folder = "update"
     if os.path.exists(update_folder):
@@ -61,7 +50,7 @@ def compare_versions():
     label = ctk.CTkLabel(app, text=result_message, wraplength=380)
     label.pack(pady=20)
 
-    # Close the window after 7 seconds
+    # Close the window after 3 seconds
     app.after(3000, close_window, app)
 
     app.mainloop()
