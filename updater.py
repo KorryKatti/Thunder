@@ -38,7 +38,7 @@ def main():
     print("Done")
 
     # Launch index.py
-    subprocess.run(["python", "index.py"])
+    subprocess.run(["python", "main.py"])
 
 if __name__ == "__main__":
     main()
