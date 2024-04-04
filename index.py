@@ -1,5 +1,8 @@
 import customtkinter as ctk
 import subprocess
+import threading
+import time
+from playsound import playsound
 import os
 import json
 import platform
@@ -342,6 +345,9 @@ def commenu_callback(choice):
 # CallBack function for devmenu
 def devmenu_callback():
     pass
+#mozart from
+# https://freemusicarchive.org/music/Brendan_Kinsella/Mozarts_Piano_Sonata_in_B-flat_Major/Mozart_-_Piano_Sonata_in_B-flat_major_III_Allegretto_Grazioso/
+
 
 #functions for optionmenu
 def quit(window):
