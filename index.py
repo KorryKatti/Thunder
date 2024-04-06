@@ -7,6 +7,7 @@ import json
 import platform
 import shutil
 import venv
+from bs4 import BeautifulSoup
 import re
 import requests
 from PIL import Image
@@ -160,6 +161,47 @@ app.geometry("1280x720")
 app.resizable(True, True)
 app.title("Thunder 🗲")
 
+def fetch_website_version(app_id):
+    # URL of the website where version is located
+    url = f"https://korrykatti.github.io/thapps/apps/{app_id}.html"
+
+    # Fetch HTML content of the website
+    response = requests.get(url)
+    if response.status_code == 200:
+        html_content = response.content
+
+        # Parse HTML content to extract version
+        soup = BeautifulSoup(html_content, 'html.parser')
+        version_tag = soup.find('h2', {'id': 'version'})
+        if version_tag:
+            return version_tag.text.strip()
+        else:
+            return None
+    else:
+        return None
+
+def update_app(app_id, app_name, repo_url, app_dir):
+    # Construct destination directory for cloning the repository
+    destination_dir = os.path.join("common", f"{app_id}_{app_name}")
+
+    # Clone the GitHub repository
+    if clone_github_repo(repo_url, destination_dir):
+        # Update successful, display message or perform any other action if needed
+        print(f"App {app_id}_{app_name} updated successfully")
+    else:
+        # Update failed, display error message or perform any other action if needed
+        print(f"Failed to update App {app_id}_{app_name}")
+
+
+def clone_github_repo(repo_url, destination_dir):
+    try:
+        subprocess.run(["git", "clone", repo_url, destination_dir])
+        print(f"Repository cloned successfully to {destination_dir}")
+        return True
+    except Exception as e:
+        print(f"Error cloning repository: {e}")
+        return False
+
 # Define the callback function for the optionmenu
 def optionmenu_callback(choice):
     print("Optionmenu dropdown clicked:", choice)
@@ -174,6 +216,13 @@ def optionmenu_callback(choice):
     elif choice == "Client Update":
         app.destroy()  # Close the current window
         subprocess.Popen(["python", "main.py"])  # Run main.py
+
+# Function to get the repository URL from the app's JSON file
+def get_repo_url(app_id):
+    json_file = os.path.join("data", f"{app_id}.json")
+    with open(json_file, "r") as f:
+        data = json.load(f)
+        return data.get("repo_url", "")
 
 # Callback Function for Libmenu
 def libmenu_callback(choice):
@@ -211,7 +260,27 @@ def libmenu_callback(choice):
             # Display a message if no apps are available
             no_apps_label = ctk.CTkLabel(scrollable_frame, text="Download some apps first silly")
             no_apps_label.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
+
+
     elif choice == "Apps Update":
+        # Clear the existing widgets in the scrollable frame
+        for widget in scrollable_frame.winfo_children():
+            widget.destroy()
+
+        # Get the list of app IDs and names
+        app_list = []
+        data_dir = "data"
+        for filename in os.listdir(data_dir):
+            if filename.endswith(".json"):
+                try:
+                    with open(os.path.join(data_dir, filename), "r") as f:
+                        app_data = json.load(f)
+                        app_id = app_data.get("app_id", "")
+                        app_name = app_data.get("app_name", "")
+                        app_list.append({"id": app_id, "name": app_name})
+                except Exception as e:
+                    print(f"Error processing JSON file {filename}: {e}")
+
         # Check for updates of installed apps
         for app_entry in app_list:
             app_id = app_entry['id']
@@ -224,9 +293,31 @@ def libmenu_callback(choice):
                 config_file = os.path.join(app_dir, "config.json")
                 if os.path.exists(config_file):
                     print(f"Config file found for app {app_id}: {config_file}")
-                    # Here you can add logic to parse the config.json file and check for updates
+                    # Fetch website version
+                    website_version = fetch_website_version(app_id)
+                    if website_version:
+                        print(f"Website version for app {app_id}: {website_version}")
+                        # Compare with local version and display appropriate message
+                        with open(config_file, 'r') as cf:
+                            config_data = json.load(cf)
+                            app_version = config_data.get("version", "")
+                            if app_version == website_version:
+                                up_to_date_label = ctk.CTkLabel(scrollable_frame, text=f"App {app_id}_{app_name} is up to date.")
+                                up_to_date_label.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
+                            else:
+                                # Delete existing app directory
+                                shutil.rmtree(app_dir)
+                                # Display update button if versions don't match
+                                repo_url = get_repo_url(app_id)  # Get repo URL
+                                update_button = ctk.CTkButton(scrollable_frame, text=f"Click me to update App {app_id}_{app_name}", command=lambda app_id=app_id, app_name=app_name, repo_url=repo_url, app_dir=app_dir: update_app(app_id, app_name, repo_url, app_dir))
+                                update_button.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
+                    else:
+                        # Error fetching website version
+                        print(f"Error fetching website version for app {app_id}")
                 else:
-                    print(f"No config file found for app {app_id}")
+                    # Display message if config file not found
+                    no_config_label = ctk.CTkLabel(scrollable_frame, text=f"No config file found for app {app_id}, it was not designed to be updated.")
+                    no_config_label.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
             else:
                 print(f"App directory not found: {app_dir}")
 
