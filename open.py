@@ -15,14 +15,19 @@ def create_venv(directory):
 def install_customtkinter(venv_directory):
     os.system(f"{os.path.join(venv_directory, 'bin', 'python')} -m pip install customtkinter")
 
-# Function to activate the virtual environment
-def activate_venv(directory):
+# Function to activate the virtual environment on Windows
+def activate_venv_windows(directory):
+    activate_script = os.path.join(directory, "Scripts", "activate")
+    return f"call {activate_script}"
+
+# Function to activate the virtual environment on Linux
+def activate_venv_linux(directory):
     activate_script = os.path.join(directory, "bin", "activate")
     return f"source {activate_script}"
 
 # Function to run main.py or updater.py using the Python interpreter from the virtual environment
 def run_script_py(venv_directory, script_name):
-    python_executable = os.path.join(venv_directory, "bin", "python")
+    python_executable = os.path.join(venv_directory, "bin", "python" if os.name != 'nt' else "Scripts", "python")
     script_path = f"{script_name}.py"
     subprocess.run([python_executable, script_path])
 
@@ -42,7 +47,7 @@ def main():
         import customtkinter
     except ImportError:
         # If not importable, run updater.py
-        activate_command = activate_venv(venv_directory)
+        activate_command = activate_venv_windows(venv_directory) if os.name == 'nt' else activate_venv_linux(venv_directory)
         subprocess.run(f"{activate_command} && python updater.py", shell=True)
         return
 
