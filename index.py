@@ -212,8 +212,23 @@ def libmenu_callback(choice):
             no_apps_label = ctk.CTkLabel(scrollable_frame, text="Download some apps first silly")
             no_apps_label.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
     elif choice == "Apps Update":
-        # Code to handle the "Apps Update" option
-        pass
+        # Check for updates of installed apps
+        for app_entry in app_list:
+            app_id = app_entry['id']
+            app_name = app_entry['name']
+            app_dir = os.path.join("common", f"{app_id}_{app_name}")
+
+            # Check if the app directory exists
+            if os.path.exists(app_dir):
+                # Check if config.json exists in the app directory
+                config_file = os.path.join(app_dir, "config.json")
+                if os.path.exists(config_file):
+                    print(f"Config file found for app {app_id}: {config_file}")
+                    # Here you can add logic to parse the config.json file and check for updates
+                else:
+                    print(f"No config file found for app {app_id}")
+            else:
+                print(f"App directory not found: {app_dir}")
 
     # i am running out of names , this function displays the app data finally
 def cherry(start_command, uninstall_command):
