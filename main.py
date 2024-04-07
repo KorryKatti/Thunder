@@ -4,6 +4,7 @@ import customtkinter as ctk
 from bs4 import BeautifulSoup
 import subprocess
 import os
+import stat
 import shutil
 
 def read_version():
@@ -11,6 +12,29 @@ def read_version():
         config_data = json.load(f)
         version = config_data.get('version', '0.0.0')
     return version
+
+
+# Define the onerror handler function
+def onerror(func, path, exc_info):
+    """
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+    
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+    # Is the error an access error?
+    if not os.access(path, os.W_OK):
+        # Attempt to add write permission
+        os.chmod(path, stat.S_IWUSR)
+        # Retry the operation
+        func(path)
+    else:
+        # If the error is for another reason, re-raise the error
+        raise
 
 def get_external_version(url):
     response = requests.get(url)
@@ -26,10 +50,8 @@ def close_window(window):
     window.destroy()
 
 def compare_versions():
-    # Delete the "update" folder if it exists
-    update_folder = "update"
-    if os.path.exists(update_folder):
-        shutil.rmtree(update_folder)
+    # Call the function to delete the update folder
+    delete_update_folder()
 
     local_version = read_version()
     external_url = 'https://korrykatti.github.io/others/thunder/version.html'  # Replace this with the actual URL of the external website
