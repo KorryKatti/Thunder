@@ -453,10 +453,12 @@ def handle_app_click(app_id):
                 print(f"Error uninstalling the app: {e}")
 
 
-                # Call cherry() with start and uninstall commands
-                cherry(start_app, uninstall_app)
-            except Exception as e:
-                print(f"Error handling app click: {e}")
+        # Call cherry() with start and uninstall commands
+        cherry(start_app, uninstall_app)
+
+    except Exception as e:
+        print(f"Error handling app click: {e}")
+
 
 # CallBack function for commenu
 def commenu_callback(choice):
