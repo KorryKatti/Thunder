@@ -2,6 +2,29 @@ import os
 import shutil
 import subprocess
 import sys
+import stat  # Import stat module for file permissions
+
+# Define the onerror handler function
+def onerror(func, path, exc_info):
+    """
+    Error handler for ``shutil.rmtree``.
+
+    If the error is due to an access error (read only file)
+    it attempts to add write permission and then retries.
+
+    If the error is for another reason it re-raises the error.
+    
+    Usage : ``shutil.rmtree(path, onerror=onerror)``
+    """
+    # Is the error an access error?
+    if not os.access(path, os.W_OK):
+        # Attempt to add write permission
+        os.chmod(path, stat.S_IWUSR)
+        # Retry the operation
+        func(path)
+    else:
+        # If the error is for another reason, re-raise the error
+        raise
 
 # Function to check if a directory exists
 def directory_exists(directory):
@@ -37,7 +60,8 @@ def main():
     # Delete the "update" folder if it exists
     update_folder = "update"
     if directory_exists(update_folder):
-        shutil.rmtree(update_folder)
+        # Use shutil.rmtree with onerror handler
+        shutil.rmtree(update_folder, onerror=onerror)
 
     if not directory_exists(venv_directory):
         create_venv(venv_directory)
@@ -46,9 +70,11 @@ def main():
         # Check if customtkinter is importable
         import customtkinter
     except ImportError:
-        # If not importable, run updater.py
         activate_command = activate_venv_windows(venv_directory) if os.name == 'nt' else activate_venv_linux(venv_directory)
-        subprocess.run(f"{activate_command} && python updater.py", shell=True)
+        try:
+            subprocess.run(f"{activate_command} && python updater.py", shell=True)
+        except Exception as e:
+            print(f"Error activating virtual environment and running updater.py: {e}")
         return
 
     install_customtkinter(venv_directory)
