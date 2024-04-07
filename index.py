@@ -12,6 +12,7 @@ import re
 import requests
 from PIL import Image
 import webview
+import webbrowser
 from io import BytesIO
 import markdown
 from tkinterhtml import HtmlFrame
@@ -457,9 +458,6 @@ def handle_app_click(app_id):
                 cherry(start_app, uninstall_app)
             except Exception as e:
                 print(f"Error handling app click: {e}")
-
-
-import webbrowser
 
 # CallBack function for commenu
 def commenu_callback(choice):
