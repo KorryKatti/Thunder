@@ -412,10 +412,32 @@ def handle_app_click(app_id):
                 print(f"Error starting the app: {e}")
 
         # Function to uninstall the app
+        import os
+        import shutil
+        import stat
+
         def uninstall_app():
+            # Define the onerror handler function
+            def onerror(func, path, exc_info):
+                """
+                Error handler for ``shutil.rmtree``.
+
+                If the error is due to an access error (read only file)
+                it attempts to add write permission and then retries.
+
+                If the error is for another reason it re-raises the error.
+                """
+                # Is the error an access error?
+                if not os.access(path, os.W_OK):
+                    os.chmod(path, stat.S_IWUSR)
+                    func(path)
+                else:
+                    raise
+
             # Delete the directory corresponding to the app
             try:
-                shutil.rmtree(app_dir)
+                # Attempt to remove the directory with the onerror handler
+                shutil.rmtree(app_dir, onerror=onerror)
                 print("App directory deleted successfully:", app_dir)
                 
                 # Remove app ID from downloads.txt
@@ -430,10 +452,11 @@ def handle_app_click(app_id):
             except Exception as e:
                 print(f"Error uninstalling the app: {e}")
 
-        # Call cherry() with start and uninstall commands
-        cherry(start_app, uninstall_app)
-    except Exception as e:
-        print(f"Error handling app click: {e}")
+
+                # Call cherry() with start and uninstall commands
+                cherry(start_app, uninstall_app)
+            except Exception as e:
+                print(f"Error handling app click: {e}")
 
 
 import webbrowser
