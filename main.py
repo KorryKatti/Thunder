@@ -13,6 +13,12 @@ def read_version():
         version = config_data.get('version', '0.0.0')
     return version
 
+# Define the function to delete the update folder
+def delete_update_folder():
+    update_folder = "update"
+    if os.path.exists(update_folder):
+        # Use shutil.rmtree with onerror handler
+        shutil.rmtree(update_folder, onerror=onerror)
 
 # Define the onerror handler function
 def onerror(func, path, exc_info):
