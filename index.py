@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import subprocess
 import threading
+import os
+import stat
 import time
 import os
 import json
@@ -413,9 +415,6 @@ def handle_app_click(app_id):
                 print(f"Error starting the app: {e}")
 
         # Function to uninstall the app
-        import os
-        import shutil
-        import stat
 
         def uninstall_app():
             # Define the onerror handler function
