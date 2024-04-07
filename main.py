@@ -14,6 +14,7 @@ def read_version():
     return version
 
 
+
 # Define the onerror handler function
 def onerror(func, path, exc_info):
     """
@@ -36,6 +37,13 @@ def onerror(func, path, exc_info):
         # If the error is for another reason, re-raise the error
         raise
 
+# Define the function to delete the update folder
+def delete_update_folder():
+    update_folder = "update"
+    if os.path.exists(update_folder):
+        # Use shutil.rmtree with onerror handler
+        shutil.rmtree(update_folder, onerror=onerror)
+        
 def get_external_version(url):
     response = requests.get(url)
     if response.status_code == 200:
