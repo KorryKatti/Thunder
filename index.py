@@ -502,14 +502,30 @@ def devmenu_callback(choice):
             response.raise_for_status()  # Raise an exception for HTTP errors
             changelog_data = response.json()
 
-            # Extract changelog text from JSON data
-            changelog_text = changelog_data.get("changelog", "No changelog available")
+            # Extract changelog data
+            changelog_entries = changelog_data.get("changelog", [])
 
-            # Display changelog in a label
-            changelog_label = ctk.CTkLabel(scrollable_frame, text=changelog_text)
-            changelog_label.pack(fill=ctk.X, padx=10, pady=10)
+            # Display changelog
+            for entry in changelog_entries:
+                version = entry.get("version", "")
+                changes = entry.get("changes", [])
+
+                # Display version
+                version_label = ctk.CTkLabel(scrollable_frame, text=f"**{version}**")
+                version_label.pack(fill=ctk.X, padx=10, pady=5)
+
+                # Display changes
+                for change in changes:
+                    change_label = ctk.CTkLabel(scrollable_frame, text=change)
+                    change_label.pack(fill=ctk.X, padx=20, pady=2)
+
+                # Add separator line
+                separator = ctk.CTkLabel(scrollable_frame, text="------------------------------------------")
+                separator.pack(fill=ctk.X, padx=10, pady=5)
+
         except Exception as e:
             print(f"Error fetching changelog: {e}")
+
 
 
 #mozart from
