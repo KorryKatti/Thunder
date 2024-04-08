@@ -38,19 +38,16 @@ def create_venv(directory):
 def install_customtkinter(venv_directory):
     os.system(f"{os.path.join(venv_directory, 'bin', 'python' if os.name != 'nt' else 'Scripts', 'pip')} install customtkinter")
 
-
-
 # Function to run main.py or updater.py using the Python interpreter from the virtual environment
 def run_script_py(venv_directory, script_name):
     python_executable = os.path.join(venv_directory, "Scripts", "python.exe" if os.name == 'nt' else "bin", "python")
-
     script_path = f"{script_name}.py"
     subprocess.run([python_executable, script_path])
 
 def activate_venv(directory):
     if os.name == 'nt':
-        activate_script = os.path.join(directory, "Scripts", "activate")
-        return f"call {activate_script}"
+        python_executable = os.path.join(directory, "Scripts", "python.exe")
+        return python_executable
     else:
         activate_script = os.path.join(directory, "bin", "activate")
         return f"source {activate_script}"
@@ -77,7 +74,7 @@ def main():
         print(f"Activate Command: {activate_command}")
         print("Python Executable:", python_executable)
         try:
-            subprocess.run(f"{activate_command} && {python_executable} updater.py", shell=True)
+            subprocess.run([python_executable, "updater.py"])
         except Exception as e:
             print(f"Error activating virtual environment and running updater.py: {e}")
         return
@@ -89,4 +86,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
