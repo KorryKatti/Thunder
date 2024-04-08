@@ -470,9 +470,46 @@ def commenu_callback(choice):
     elif choice == "Thunder Halls":
         webbrowser.open("http://korrykatti.github.io/others/thunder/halls.html")
 
+import tkinterweb as tkweb
+
+import requests
+
 # CallBack function for devmenu
-def devmenu_callback():
-    pass
+import webview
+
+# CallBack function for devmenu
+def devmenu_callback(choice):
+    # Clear existing widgets in the scrollable frame
+    for widget in scrollable_frame.winfo_children():
+        widget.destroy()
+
+    # Display different content based on the choice
+    if choice == "Dev Blog":
+        # Create a TkinterHTML object
+        html_frame = tkweb.HtmlFrame(scrollable_frame, width=1280, height=720)
+        html_frame.pack(padx=10, pady=10)  # Add padding for top margin
+
+        # Load the website
+        html_frame.load_url("https://your-dev-blog-website.com")
+
+
+
+    elif choice == "Changelogs":
+        # Fetch changelog from JSON file
+        changelog_url = "https://korrykatti.github.io/thapps/data/changelog.json"
+        try:
+            response = requests.get(changelog_url)
+            response.raise_for_status()  # Raise an exception for HTTP errors
+            changelog_data = response.json()
+
+            # Extract changelog text from JSON data
+            changelog_text = changelog_data.get("changelog", "No changelog available")
+
+            # Display changelog in a label
+            changelog_label = ctk.CTkLabel(scrollable_frame, text=changelog_text)
+            changelog_label.pack(fill=ctk.X, padx=10, pady=10)
+        except Exception as e:
+            print(f"Error fetching changelog: {e}")
 
 
 #mozart from
