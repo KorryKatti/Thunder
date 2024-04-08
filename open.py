@@ -69,15 +69,19 @@ def main():
         # Check if customtkinter is importable
         import customtkinter
     except ImportError:
+        print("Customtkinter not found, attempting to run updater.py...")
         activate_command = activate_venv(venv_directory)
+        print(f"Activate Command: {activate_command}")
         try:
             subprocess.run(f"{activate_command} && python updater.py", shell=True)
         except Exception as e:
             print(f"Error activating virtual environment and running updater.py: {e}")
         return
 
+    print("Customtkinter found, installing...")
     install_customtkinter(venv_directory)
     run_script_py(venv_directory, "main")
+
 
 if __name__ == "__main__":
     main()
