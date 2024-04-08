@@ -49,14 +49,10 @@ def activate_venv(directory):
 
 # Function to run main.py or updater.py using the Python interpreter from the virtual environment
 def run_script_py(venv_directory, script_name):
-    if os.name == 'nt':
-        activate_command = activate_venv(venv_directory)
-        script_path = f"{script_name}.py"
-        subprocess.run(f"{activate_command} && python {script_path}", shell=True)
-    else:
-        python_executable = os.path.join(venv_directory, "bin", "python")
-        script_path = f"{script_name}.py"
-        subprocess.run([python_executable, script_path])
+    python_executable = os.path.join(venv_directory, "bin", "python" if os.name != 'nt' else "Scripts", "python")
+    script_path = f"{script_name}.py"
+    subprocess.run([python_executable, script_path])
+
 
 
 def main():
