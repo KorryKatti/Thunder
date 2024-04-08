@@ -73,7 +73,7 @@ def main():
         activate_command = activate_venv(venv_directory)
         python_executable = os.path.join(venv_directory, "bin", "python" if os.name != 'nt' else "Scripts", "python")
         print(f"Activate Command: {activate_command}")
-        print(f"Python Executable: {python_executable}")
+        print("Python Executable:", python_executable)
         try:
             subprocess.run(f"{activate_command} && {python_executable} updater.py", shell=True)
         except Exception as e:
