@@ -1,4 +1,3 @@
-""" oh """
 import os
 import shutil
 import subprocess
@@ -37,21 +36,23 @@ def create_venv(directory):
 
 # Function to install customtkinter (assuming it's a package)
 def install_customtkinter(venv_directory):
-    os.system(f"{os.path.join(venv_directory, 'bin', 'python' if os.name != 'nt' else 'Scripts', 'pip')} install customtkinter")
+    os.system(f"{os.path.join(venv_directory, 'bin', 'python')} -m pip install customtkinter")
+
+# Function to activate the virtual environment on Windows
+def activate_venv_windows(directory):
+    activate_script = os.path.join(directory, "Scripts", "activate")
+    return f"call {activate_script}"
+
+# Function to activate the virtual environment on Linux
+def activate_venv_linux(directory):
+    activate_script = os.path.join(directory, "bin", "activate")
+    return f"source {activate_script}"
 
 # Function to run main.py or updater.py using the Python interpreter from the virtual environment
 def run_script_py(venv_directory, script_name):
-    python_executable = os.path.join(venv_directory, "Scripts", "python.exe" if os.name == 'nt' else "bin", "python")
+    python_executable = os.path.join(venv_directory, "bin", "python" if os.name != 'nt' else "Scripts", "python")
     script_path = f"{script_name}.py"
     subprocess.run([python_executable, script_path])
-
-def activate_venv(directory):
-    if os.name == 'nt':
-        python_executable = os.path.join(directory, "Scripts", "python.exe")
-        return python_executable
-    else:
-        activate_script = os.path.join(directory, "bin", "activate")
-        return f"source {activate_script}"
 
 def main():
     venv_directory = "myenv"
@@ -69,21 +70,15 @@ def main():
         # Check if customtkinter is importable
         import customtkinter
     except ImportError:
-        print("Customtkinter not found, attempting to run updater.py...")
-        activate_command = activate_venv(venv_directory)
-        python_executable = os.path.join(venv_directory, "Scripts", "python.exe" if os.name == 'nt' else "bin", "python")
-        print(f"Activate Command: {activate_command}")
-        print("Python Executable:", python_executable)
+        activate_command = activate_venv_windows(venv_directory) if os.name == 'nt' else activate_venv_linux(venv_directory)
         try:
-            subprocess.run([python_executable, "updater.py"])
+            subprocess.run(f"{activate_command} && python updater.py", shell=True)
         except Exception as e:
             print(f"Error activating virtual environment and running updater.py: {e}")
         return
 
-    print("Customtkinter found, installing...")
     install_customtkinter(venv_directory)
     run_script_py(venv_directory, "main")
-
 
 if __name__ == "__main__":
     main()
