@@ -460,6 +460,7 @@ def handle_app_click(app_id):
         print(f"Error handling app click: {e}")
 
 
+
 # CallBack function for commenu
 def commenu_callback(choice):
     if choice == "Community":
