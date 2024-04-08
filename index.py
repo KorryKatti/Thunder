@@ -374,7 +374,7 @@ def handle_app_click(app_id):
         app_dir = os.path.join("common", app_id)
         
         # Check if the thunderenv directory exists in the app directory
-        thunderenv_path = os.path.join(app_dir, "thunderenv")
+        thunderenv_path = os.path.join(app_dir, "myenv")
         if os.path.exists(thunderenv_path) and os.path.isdir(thunderenv_path):
             print("Thunderenv found.")
         else:
