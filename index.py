@@ -490,7 +490,7 @@ def devmenu_callback(choice):
         html_frame.pack(padx=10, pady=10)  # Add padding for top margin
 
         # Load the website
-        html_frame.load_url("https://your-dev-blog-website.com")
+        html_frame.load_url("https://korrykatti.github.io/thapps/data/index.html")
 
 
 
