@@ -53,8 +53,6 @@ def run_script_py(venv_directory, script_name):
     script_path = f"{script_name}.py"
     subprocess.run([python_executable, script_path])
 
-
-
 def main():
     venv_directory = "myenv"
 
@@ -77,7 +75,7 @@ def main():
         print(f"Activate Command: {activate_command}")
         print(f"Python Executable: {python_executable}")
         try:
-            subprocess.run(f"{activate_command} && python updater.py", shell=True)
+            subprocess.run(f"{activate_command} && {python_executable} updater.py", shell=True)
         except Exception as e:
             print(f"Error activating virtual environment and running updater.py: {e}")
         return
