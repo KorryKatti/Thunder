@@ -555,7 +555,8 @@ def download_repo(repo_url, app_id, app_name):
     downloads_file = os.path.join(appfiles_dir, "downloads.txt")
     if os.path.exists(downloads_file):
         with open(downloads_file, "a") as f:
-            f.write(f"{app_id}\n")
+            f.write(app_id + "\n")
+
     else:
         with open(downloads_file, "w") as f:
             f.write(f"{app_id}\n")
