@@ -38,7 +38,14 @@ def create_venv(directory):
 def install_customtkinter(venv_directory):
     os.system(f"{os.path.join(venv_directory, 'bin', 'python' if os.name != 'nt' else 'Scripts', 'pip')} install customtkinter")
 
-# Function to activate the virtual environment
+
+
+# Function to run main.py or updater.py using the Python interpreter from the virtual environment
+def run_script_py(venv_directory, script_name):
+    python_executable = os.path.join(venv_directory, "Scripts" if os.name == 'nt' else "bin", "python" + (".exe" if os.name == 'nt' else ""))
+    script_path = f"{script_name}.py"
+    subprocess.run([python_executable, script_path])
+
 def activate_venv(directory):
     if os.name == 'nt':
         activate_script = os.path.join(directory, "Scripts", "activate")
@@ -46,12 +53,6 @@ def activate_venv(directory):
     else:
         activate_script = os.path.join(directory, "bin", "activate")
         return f"source {activate_script}"
-
-# Function to run main.py or updater.py using the Python interpreter from the virtual environment
-def run_script_py(venv_directory, script_name):
-    python_executable = os.path.join(venv_directory, "Scripts" if os.name == 'nt' else "bin", "python" + (".exe" if os.name == 'nt' else ""))
-    script_path = f"{script_name}.py"
-    subprocess.run([python_executable, script_path])
 
 def main():
     venv_directory = "myenv"
@@ -71,7 +72,7 @@ def main():
     except ImportError:
         print("Customtkinter not found, attempting to run updater.py...")
         activate_command = activate_venv(venv_directory)
-        python_executable = os.path.join(venv_directory, "bin", "python" if os.name != 'nt' else "Scripts", "python")
+        python_executable = os.path.join(venv_directory, "Scripts", "python.exe" if os.name == 'nt' else "bin", "python")
         print(f"Activate Command: {activate_command}")
         print("Python Executable:", python_executable)
         try:
@@ -87,3 +88,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
