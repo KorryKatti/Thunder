@@ -40,17 +40,15 @@ def install_customtkinter(venv_directory):
 
 # Function to activate the virtual environment on Windows
 def activate_venv_windows(directory):
-    activate_script = os.path.join(directory, "Scripts", "activate")
-    return f"call {activate_script}"
+    return f"call {directory}\\Scripts\\activate"
 
 # Function to activate the virtual environment on Linux
 def activate_venv_linux(directory):
-    activate_script = os.path.join(directory, "bin", "activate")
-    return f"source {activate_script}"
+    return f"source {directory}/bin/activate"
 
 # Function to run main.py or updater.py using the Python interpreter from the virtual environment
 def run_script_py(venv_directory, script_name):
-    python_executable = os.path.join(venv_directory, "bin", "python" if os.name != 'nt' else "Scripts", "python")
+    python_executable = os.path.join(venv_directory, "Scripts", "python" if os.name == 'nt' else "bin", "python")
     script_path = f"{script_name}.py"
     subprocess.run([python_executable, script_path])
 
