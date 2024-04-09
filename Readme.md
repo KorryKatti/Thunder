@@ -1,5 +1,4 @@
-![visitors](https://visitor-badge.glitch.me/badge?page_id=KorryKatti.Thunder&left_color=green&right_color=red)
-
+![KorryKatti's GitHub profile views](https://komarev.com/ghpvc/?username=KorryKatti)
 
 # Thunder - Python Package Management and Distribution Platform
 
