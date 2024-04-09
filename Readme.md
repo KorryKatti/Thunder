@@ -1,4 +1,5 @@
-![KorryKatti's GitHub profile views](https://komarev.com/ghpvc/?username=KorryKatti)
+![KorryKatti's GitHub repository views](https://komarev.com/ghpvc/?username=KorryKatti&label=Repo+Views&color=brightgreen)
+
 
 # Thunder - Python Package Management and Distribution Platform
 
