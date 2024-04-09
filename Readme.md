@@ -1,3 +1,6 @@
+![visitors](https://visitor-badge.glitch.me/badge?page_id=KorryKatti.Thunder&left_color=green&right_color=red)
+
+
 # Thunder - Python Package Management and Distribution Platform
 
 Thunder is an open-source platform designed to provide a streamlined experience for managing and distributing Python packages. Similar to popular platforms like Steam, Thunder allows users to upload their Python applications, which can then be downloaded and installed by other users seamlessly. Thunder also includes automatic updates for the applications hosted on the platform and handles all the installation requirements for each application.
