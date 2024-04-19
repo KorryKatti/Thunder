@@ -1,82 +1,66 @@
+import subprocess
 import os
 import shutil
-import subprocess
-import sys
-import stat  # Import stat module for file permissions
 
-# Define the onerror handler function
-def onerror(func, path, exc_info):
-    """
-    Error handler for ``shutil.rmtree``.
-
-    If the error is due to an access error (read only file)
-    it attempts to add write permission and then retries.
-
-    If the error is for another reason it re-raises the error.
+def create_activate_venv(venv_name):
+    # Check if venv directory exists
+    venv_path = os.path.join(os.getcwd(), venv_name)
+    if not os.path.exists(venv_path):
+        # If venv directory doesn't exist, create it
+        subprocess.run(["python", "-m", "venv", venv_name])
     
-    Usage : ``shutil.rmtree(path, onerror=onerror)``
-    """
-    # Is the error an access error?
-    if not os.access(path, os.W_OK):
-        # Attempt to add write permission
-        os.chmod(path, stat.S_IWUSR)
-        # Retry the operation
+    # Activate virtual environment
+    activate_script = os.path.join(venv_path, "Scripts", "activate")
+    subprocess.run(["source" if os.name != "nt" else "cmd", activate_script])
+
+def install_required_modules():
+    # List of required modules
+    required_modules = [
+        "requests",
+        "customtkinter",
+        "beautifulsoup4"
+    ]
+    
+    # Install required modules
+    subprocess.run(["pip", "install", *required_modules])
+
+def check_install_run():
+    # Check if required modules are installed
+    try:
+        import requests
+        import customtkinter as ctk
+        from bs4 import BeautifulSoup
+    except ImportError as e:
+        print(f"Error: {e.name} module not found.")
+        print("Installing required modules...")
+        install_required_modules()
+    
+    # Run main.py
+    subprocess.run(["python", "main.py"])
+
+def delete_update_folder():
+    # Delete "update" folder if it exists
+    update_folder = os.path.join(os.getcwd(), "update")
+    if os.path.exists(update_folder):
+        try:
+            shutil.rmtree(update_folder, onerror=handle_remove_readonly)
+            print("Deleted 'update' folder.")
+        except Exception as e:
+            print(f"Error deleting 'update' folder: {e}")
+
+def handle_remove_readonly(func, path, exc):
+    excvalue = exc[1]
+    if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
+        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)  # 0777
         func(path)
     else:
-        # If the error is for another reason, re-raise the error
         raise
 
-# Function to check if a directory exists
-def directory_exists(directory):
-    return os.path.exists(directory)
-
-# Function to create a virtual environment
-def create_venv(directory):
-    os.system(f"{sys.executable} -m venv {directory}")
-
-# Function to install customtkinter (assuming it's a package)
-def install_customtkinter(venv_directory):
-    os.system(f"{os.path.join(venv_directory, 'bin', 'python')} -m pip install customtkinter")
-
-# Function to activate the virtual environment on Windows
-def activate_venv_windows(directory):
-    return f"call {directory}\\Scripts\\activate"
-
-# Function to activate the virtual environment on Linux
-def activate_venv_linux(directory):
-    return f"source {directory}/bin/activate"
-
-# Function to run main.py or updater.py using the Python interpreter from the virtual environment
-def run_script_py(venv_directory, script_name):
-    python_executable = os.path.join(venv_directory, "Scripts", "python" if os.name == 'nt' else "bin", "python")
-    script_path = f"{script_name}.py"
-    subprocess.run([python_executable, script_path])
-
 def main():
-    venv_directory = "myenv"
-
-    # Delete the "update" folder if it exists
-    update_folder = "update"
-    if directory_exists(update_folder):
-        # Use shutil.rmtree with onerror handler
-        shutil.rmtree(update_folder, onerror=onerror)
-
-    if not directory_exists(venv_directory):
-        create_venv(venv_directory)
-
-    try:
-        # Check if customtkinter is importable
-        import customtkinter
-    except ImportError:
-        activate_command = activate_venv_windows(venv_directory) if os.name == 'nt' else activate_venv_linux(venv_directory)
-        try:
-            subprocess.run(f"{activate_command} && python updater.py", shell=True)
-        except Exception as e:
-            print(f"Error activating virtual environment and running updater.py: {e}")
-        return
-
-    install_customtkinter(venv_directory)
-    run_script_py(venv_directory, "main")
+    venv_name = "myenv"
+    delete_update_folder()
+    create_activate_venv(venv_name)
+    check_install_run()
 
 if __name__ == "__main__":
     main()
