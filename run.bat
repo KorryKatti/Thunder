@@ -1,2 +1,2 @@
 @echo off
-python "%~dp0open.py"
+python "%~dp0winopen.py"
