@@ -8,7 +8,7 @@ url="https://github.com/KorryKatti/Thunder"
 license=('MIT')
 depends=('tk')
 source=("$url/releases/download/Debut/Thunder0.0.0.tar")
-sha256sums=('SKIP')
+sha256sums=('fb714eb529cd7a2994f3c5b6eb7ce72525c32c6c834fe6056e71a8cc1635ee16')
 
 prepare() {
     cd "$srcdir"
