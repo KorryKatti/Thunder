@@ -1,6 +1,6 @@
 # Maintainer: Your Name <your@email.com>
 pkgname=thunder
-pkgver=1.0
+pkgver=0.0
 pkgrel=1
 pkgdesc="A brief description of what Thunder does"
 arch=('any')
