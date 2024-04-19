@@ -1,8 +1,8 @@
-# Maintainer: Your Name <your@email.com>
+# Maintainer: KorryKatti 8nctvx7gi@mozmail.com
 pkgname=thunder
 pkgver=0.0
 pkgrel=1
-pkgdesc="A brief description of what Thunder does"
+pkgdesc="An App Store For Python Projects"
 arch=('any')
 url="https://github.com/KorryKatti/Thunder"
 license=('MIT')
