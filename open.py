@@ -28,7 +28,8 @@ def install_required_modules(venv_directory):
         "customtkinter",
         "beautifulsoup4"
     ]
-    subprocess.run([os.path.join(venv_directory, 'bin' if os.name != 'nt' else 'Scripts', 'pip'), "install", *required_modules])
+    pip_executable = os.path.join(venv_directory, 'bin' if os.name != 'nt' else 'Scripts', 'pip')
+    subprocess.run([pip_executable, "install", *required_modules])
 
 # Function to activate the virtual environment
 def activate_venv(directory):
