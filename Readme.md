@@ -1,4 +1,5 @@
-![KorryKatti's GitHub repository views](https://komarev.com/ghpvc/?username=KorryKatti&label=Repo+Views&color=brightgreen)
+[![Matrix](https://img.shields.io/badge/Matrix-@korrykatti:matrix.org-blue)](https://matrix.to/#/@korrykatti:matrix.org)
+
 
 
 # Thunder - Python Package Management and Distribution Platform
