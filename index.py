@@ -160,7 +160,7 @@ def download_app(app_data):
 
 # Create the main application window
 app = ctk.CTk()
-app.geometry("1280x720")
+app.geometry("1152×648")
 app.resizable(True, True)
 app.title("Thunder 🗲")
 
