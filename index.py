@@ -486,7 +486,7 @@ def devmenu_callback(choice):
     # Display different content based on the choice
     if choice == "Dev Blog":
         # Create a TkinterHTML object
-        html_frame = tkweb.HtmlFrame(scrollable_frame, width=1280, height=720)
+        html_frame = tkweb.HtmlFrame(scrollable_frame, width=1152,height=648)
         html_frame.pack(padx=10, pady=10)  # Add padding for top margin
 
         # Load the website
@@ -607,7 +607,7 @@ devmenu = ctk.CTkOptionMenu(frame,values=["Dev Blog", "Changelogs"],
 devmenu.grid(row=0, column=3, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
 
 # Create a scrollable frame inside the existing frame to display contents
-scrollable_frame = ctk.CTkScrollableFrame(frame, width=1280, height=720, corner_radius=0, fg_color="transparent")
+scrollable_frame = ctk.CTkScrollableFrame(frame, width=1024, height=576, corner_radius=0, fg_color="transparent")
 scrollable_frame.grid(row=1, column=0, columnspan=4, sticky="nsew")
 
 # Add widgets to the scrollable frame
