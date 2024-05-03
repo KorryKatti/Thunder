@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import subprocess
 import threading
+from PIL import Image as PILImage
 import os
 import stat
 import time
@@ -24,7 +25,19 @@ subprocess.Popen(["python", "appfiles/repup.py"])
 
 # Set the appearance mode and default color theme
 ctk.set_appearance_mode("dark")  # Modes: system (default), light, dark
-ctk.set_default_color_theme("dark-blue")  # Themes: blue (default), dark-blue, green
+#get theme from a dropdown
+# Read the theme name from theme.txt
+theme_file_path = "themes/theme.txt"
+try:
+    with open(theme_file_path, "r") as theme_file:
+        theme_name = theme_file.read().strip()
+
+    # Set the default color theme using the theme name
+    ctk.set_default_color_theme(theme_name)
+    print("Theme set successfully!")
+except FileNotFoundError:
+    print("Theme file not found.")
+
 
 #what download does
 def download_app():
@@ -44,8 +57,6 @@ def download_image(url):
         print(f"Error downloading image from URL: {url}. Error: {e}")
         return None
 
-# Function to create labels for each application data
-# Function to create labels for each application data
 # Function to create labels for each application data
 def create_labels():
     data_dir = "data"
@@ -264,6 +275,18 @@ def libmenu_callback(choice):
             no_apps_label = ctk.CTkLabel(scrollable_frame, text="Download some apps first silly")
             no_apps_label.pack(fill=ctk.X, padx=10, pady=(10, 5), anchor="w")
 
+            # Load the image
+            notfound_path = "media/404.png" 
+            notfound = PILImage.open(notfound_path)
+
+            # Convert the image into a CTkImage object
+            ctk_alpha = ctk.CTkImage(light_image=notfound, dark_image=notfound, size=(400,400))
+
+            # Create a label to display the image
+            notfound_label = ctk.CTkLabel(scrollable_frame, image=ctk_alpha, text= "")
+            notfound_label.pack(fill=ctk.X, padx=10, pady=5)
+
+
 
     elif choice == "Apps Update":
         # Clear the existing widgets in the scrollable frame
@@ -387,6 +410,7 @@ def handle_app_click(app_id):
                 print(f"Error creating virtual environment: {e}")
 
         # Function to start the app
+        # Function to start the app
         def start_app():
             try:
                 # Check if the thunderenv directory exists in the app directory
@@ -403,16 +427,23 @@ def handle_app_click(app_id):
                     # Get the main file path from the app's JSON file
                     main_file_name = app_data.get("main_file", "")
                     main_file = os.path.join(app_dir, main_file_name)
+                    maincdfile = main_file_name
 
                     if os.path.exists(main_file):
                         print("Launching the app...")
-                        subprocess.run([os.path.join(thunderenv_path, "bin", "python"), main_file])
+                        # Change the current working directory to app_dir
+                        os.chdir(app_dir)
+                        thundercdenv = "myenv"
+                        subprocess.run([os.path.join(thundercdenv, "bin", "python"), maincdfile])
+                        os.chdir("../../")
                     else:
                         print("Main file not found.")
+                        return  # Return if main file is not found
                 else:
                     print("Thunderenv not found.")
             except Exception as e:
                 print(f"Error starting the app: {e}")
+
 
         # Function to uninstall the app
 
@@ -486,7 +517,7 @@ def devmenu_callback(choice):
     # Display different content based on the choice
     if choice == "Dev Blog":
         # Create a TkinterHTML object
-        html_frame = tkweb.HtmlFrame(scrollable_frame, width=1152,height=648)
+        html_frame = tkweb.HtmlFrame(scrollable_frame, width=864,height=486)
         html_frame.pack(padx=10, pady=10)  # Add padding for top margin
 
         # Load the website
@@ -581,37 +612,91 @@ def download_repo(repo_url, app_id, app_name):
     # Close the top-up window after 3 seconds
     download_window.after(3000, close_window)
 
+# most of the themes are from https://github.com/a13xe/CTkThemesPack and https://github.com/rigvedmaanas/CustomTkinterThemes
+def theme_set(choice):
+    with open("themes/theme.txt", "w") as f:
+        if choice == "Default":
+            f.write("")
+        elif choice == "Orange":
+            f.write("themes/orange.json")
+        elif choice == "Green":
+            f.write("themes/green.json")
+        elif choice =="Coffee":
+            f.write("themes/coffee.json")
+        elif choice =="Violet":
+            f.write("themes/violet.json")
+        elif choice =="Blue":
+            f.write("themes/blue.json")
+        elif choice =="Carrot":
+            f.write("themes/carrot.json")
+        elif choice =="Marsh":
+            f.write("themes/marsh.json")
+        elif choice =="Metal":
+            f.write("themes/metal.json")
+        elif choice == "Pink":
+            f.write("themes/pink.json")
+        elif choice == "Red":
+            f.write("themes/red.json")
+        elif choice == "Rose":
+            f.write("themes/rose.json")
+        elif choice == "Sky":
+            f.write("themes/sky.json")
+        elif choice == "Yellow":
+            f.write("themes/yellow.json")
+        elif choice == "FlipperZero":
+            f.write("themes/flipperzero.json")
+        elif choice == "hacked":
+            f.write("themes/hacked.json")
+    f.close()
+    app.destroy()  # Close the current window
+    subprocess.Popen(["python", "index.py"])
+
 
 # Create a frame inside the main window for organizing widgets
 frame = ctk.CTkFrame(app)
-frame.pack(fill=ctk.BOTH, expand=True, padx=20, pady=20)  # Pack the frame to fill the window
+frame.pack(fill=ctk.BOTH, expand=True, padx=11, pady=10)  # Pack the frame to fill the window
 
 # Create the optionmenu widget
 optionmenu = ctk.CTkOptionMenu(frame, values=["Home", "Client Update", "Quit"],
                                          command=optionmenu_callback)
-optionmenu.grid(row=0, column=0, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
+optionmenu.grid(row=0, column=0, padx=2, pady=0, sticky=ctk.W)  # Align to the west (left)
 
 # Create the library menu widget
 libmenu = ctk.CTkOptionMenu(frame, values=["Library", "Apps Update"],
                                          command=libmenu_callback)
-libmenu.grid(row=0, column=1, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
+libmenu.grid(row=0, column=1, padx=0, pady=0, sticky=ctk.W)  # Align to the west (left)
 
 # Create the Commmunity Widget
 commenu = ctk.CTkOptionMenu(frame, values=["Community", "Image Board", "Thunder Halls"],
                                          command=commenu_callback)
-commenu.grid(row=0, column=2, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
+commenu.grid(row=0, column=2, padx=0, pady=0, sticky=ctk.W)  # Align to the west (left)
 
 # Create DevBlogs Widget
 devmenu = ctk.CTkOptionMenu(frame,values=["Dev Blog", "Changelogs"],
                                          command=devmenu_callback)
-devmenu.grid(row=0, column=3, padx=10, pady=0, sticky=ctk.W)  # Align to the west (left)
+devmenu.grid(row=0, column=3, padx=0, pady=0, sticky=ctk.W)  # Align to the west (left)
+
+# Create the theme selector
+thememenu = ctk.CTkOptionMenu(frame,values=["Default","Orange","Green","Coffee","Violet","Blue","Carrot","Marsh","Metal","Pink","Red","Rose","Sky","Yellow","FlipperZero","hacked"], command=theme_set)
+thememenu.grid(row=0, column=4, padx=0, pady=0, sticky=ctk.W)  # Align to the west
 
 # Create a scrollable frame inside the existing frame to display contents
 scrollable_frame = ctk.CTkScrollableFrame(frame, width=1024, height=576, corner_radius=0, fg_color="transparent")
-scrollable_frame.grid(row=1, column=0, columnspan=4, sticky="nsew")
+scrollable_frame.grid(row=2, column=0, columnspan=4, sticky="nsew")
 
 # Add widgets to the scrollable frame
 create_labels()
+
+# Load the image
+alpha_path = "media/grass.png" 
+alpha = PILImage.open(alpha_path)
+
+# Convert the image into a CTkImage object
+ctk_alpha = ctk.CTkImage(light_image=alpha, dark_image=alpha, size=(1280, 100))
+
+# Create a label to display the image
+alpha_label = ctk.CTkLabel(frame, image=ctk_alpha, text ="")
+alpha_label.grid(row=1, column=0, columnspan=4, padx=20, pady=20, sticky="ew")  # Adjust padding and alignment as needed
 
 # Start the main event loop
 app.mainloop()
