@@ -38,10 +38,10 @@ def main():
     if not os.path.exists(venv_directory):
         subprocess.run([sys.executable, "-m", "venv", venv_directory], shell=True)
 
-    activate_script = os.path.join(venv_directory, "bin", "activate")
-    subprocess.run(["source", activate_script], shell=True)
+    activate_script = os.path.join(venv_directory, "Scripts", "activate")
+    subprocess.run([activate_script], shell=True)
 
-    python_executable = os.path.join(venv_directory, "bin", "python")
+    python_executable = os.path.join(venv_directory, "Scripts", "python")
     subprocess.run([python_executable, "updater.py"], shell=True)
 
 if __name__ == "__main__":

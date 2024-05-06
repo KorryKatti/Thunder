@@ -653,39 +653,38 @@ def theme_set(choice):
 
 
 # Create a frame inside the main window for organizing widgets
-frame = ctk.CTkFrame(app)
-frame.pack(fill=ctk.BOTH, expand=True, padx=11, pady=10)  # Pack the frame to fill the window
+# Create the main frame
+mainframe = ctk.CTkFrame(app)
+mainframe.pack(expand=True, fill="both")  # Pack the main frame to fill the window
+
+# Create the frame for organizing widgets
+frame = ctk.CTkFrame(mainframe, width=200)
+frame.pack(fill="x")
 
 # Create the optionmenu widget
 optionmenu = ctk.CTkOptionMenu(frame, values=["Home", "Client Update", "Quit"],
-                                         command=optionmenu_callback)
-optionmenu.grid(row=0, column=0, padx=2, pady=0, sticky=ctk.W)  # Align to the west (left)
+                                command=optionmenu_callback)
+optionmenu.pack(pady=(10, 10), expand=True, side="left")
 
 # Create the library menu widget
 libmenu = ctk.CTkOptionMenu(frame, values=["Library", "Apps Update"],
-                                         command=libmenu_callback)
-libmenu.grid(row=0, column=1, padx=0, pady=0, sticky=ctk.W)  # Align to the west (left)
+                            command=libmenu_callback)
+libmenu.pack(pady=(10, 10), expand=True, side="left")
 
-# Create the Commmunity Widget
+# Create the Community Widget
 commenu = ctk.CTkOptionMenu(frame, values=["Community", "Image Board", "Thunder Halls"],
-                                         command=commenu_callback)
-commenu.grid(row=0, column=2, padx=0, pady=0, sticky=ctk.W)  # Align to the west (left)
+                             command=commenu_callback)
+commenu.pack(pady=(10, 10), expand=True, side="left")
 
 # Create DevBlogs Widget
-devmenu = ctk.CTkOptionMenu(frame,values=["Dev Blog", "Changelogs"],
-                                         command=devmenu_callback)
-devmenu.grid(row=0, column=3, padx=0, pady=0, sticky=ctk.W)  # Align to the west (left)
+devmenu = ctk.CTkOptionMenu(frame, values=["Dev Blog", "Changelogs"],
+                             command=devmenu_callback)
+devmenu.pack(pady=(10, 10), expand=True, side="left")
 
 # Create the theme selector
-thememenu = ctk.CTkOptionMenu(frame,values=["Default","Orange","Green","Coffee","Violet","Blue","Carrot","Marsh","Metal","Pink","Red","Rose","Sky","Yellow","FlipperZero","hacked"], command=theme_set)
-thememenu.grid(row=0, column=4, padx=0, pady=0, sticky=ctk.W)  # Align to the west
-
-# Create a scrollable frame inside the existing frame to display contents
-scrollable_frame = ctk.CTkScrollableFrame(frame, width=1024, height=576, corner_radius=0, fg_color="transparent")
-scrollable_frame.grid(row=2, column=0, columnspan=4, sticky="nsew")
-
-# Add widgets to the scrollable frame
-create_labels()
+thememenu = ctk.CTkOptionMenu(frame, values=["Default","Orange","Green","Coffee","Violet","Blue","Carrot","Marsh","Metal","Pink","Red","Rose","Sky","Yellow","FlipperZero","hacked"],
+                               command=theme_set)
+thememenu.pack(pady=(10, 10), expand=True, side="left")
 
 # Load the image
 alpha_path = "media/grass.png" 
@@ -695,8 +694,15 @@ alpha = PILImage.open(alpha_path)
 ctk_alpha = ctk.CTkImage(light_image=alpha, dark_image=alpha, size=(1280, 100))
 
 # Create a label to display the image
-alpha_label = ctk.CTkLabel(frame, image=ctk_alpha, text ="")
-alpha_label.grid(row=1, column=0, columnspan=4, padx=20, pady=20, sticky="ew")  # Adjust padding and alignment as needed
+alpha_label = ctk.CTkLabel(mainframe, image=ctk_alpha, text ="")
+alpha_label.pack(padx=20, pady=20, fill="x")  # Adjust padding and alignment as needed
+
+# Create a scrollable frame inside the existing main frame to display contents
+scrollable_frame = ctk.CTkScrollableFrame(mainframe, width=1024, height=576, corner_radius=0, fg_color="transparent")
+scrollable_frame.pack(expand=True, fill="both")
+
+# Add widgets to the scrollable frame
+create_labels()
 
 # Start the main event loop
 app.mainloop()
