@@ -27,12 +27,10 @@ If you don't want to read all that and just want to install and use Thunder, [cl
 
 ## Contributing
 
-Thunder is an open-source project, and contributions are welcome! If you're interested in contributing to Thunder, please follow these steps:
+Thunder is an open-source project, and contributions are welcome! 
 
-1. Fork the repository.
-2. Create a new branch for your feature or bug fix.
-3. Make your changes and ensure all tests pass.
-4. Submit a pull request detailing your changes.
+For more detailed guidelines on contributing, please read [contributing.md](CONTRIBUTING.md).
+
 
 ## Reporting Issues
 
