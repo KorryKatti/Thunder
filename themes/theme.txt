@@ -1,1 +1,1 @@
-themes/hacked.json
+themes/cyberpunk.json
