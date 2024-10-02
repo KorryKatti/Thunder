@@ -19,12 +19,13 @@ Currently, Thunder is under development and not yet available for public use. St
 
 ## Documentation
 
-Explore the [documentation](https://example.com) for Thunder to learn more about its features and usage.
+Explore the [documentation](https://korrykatti.is-a.dev/ThunderDocs/doc.html) for Thunder to learn more about its features and usage.
 
-## Tutorial
-
+<!-- ## Tutorial
 If you don't want to read all that and just want to install and use Thunder, [click here](https://example.com) for a quick tutorial that takes only 2 minutes.
 
+Commented out as couldn't find tutorial link
+-->
 ## Contributing
 
 Thunder is an open-source project, and contributions are welcome! 
