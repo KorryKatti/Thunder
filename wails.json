@@ -1,0 +1,13 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "thunder-nightly",
+  "outputfilename": "thunder-nightly",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "korrykatti",
+    "email": "143781663+KorryKatti@users.noreply.github.com"
+  }
+}
