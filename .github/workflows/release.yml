@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
@@ -56,18 +56,59 @@ jobs:
           name: thunder-windows-amd64
           path: build/bin/thunder-windows-amd64.exe
 
-  release:
-    needs: build
+  build-linux:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download artifact
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Bun
+        run: npm install -g bun
+
+      - name: Install Wails via Nix
+        run: nix-shell -p go --run "go install github.com/wailsapp/wails/v2/cmd/wails@latest"
+
+      - name: Install frontend deps
+        run: bun install
+        working-directory: frontend
+
+      - name: Build with Nix
+        run: |
+          nix-shell -p pkg-config gtk3 webkit2gtk_4_0 gobject-introspection --run "export PATH=$HOME/go/bin:$PATH && wails build -clean"
+
+      - name: Rename binary
+        run: mv build/bin/thunder thunder-linux-amd64
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: thunder-linux-amd64
+          path: thunder-linux-amd64
+
+  release:
+    needs: [build-windows, build-linux]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
-          name: thunder-windows-amd64
+          path: artifacts
+          merge-multiple: true
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: thunder-windows-amd64.exe
+          files: |
+            artifacts/thunder-windows-amd64.exe
+            artifacts/thunder-linux-amd64

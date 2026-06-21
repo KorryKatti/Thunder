@@ -14,7 +14,11 @@ jobs:
   build:
     if: contains(github.event.head_commit.message, '[build]') || contains(github.event.head_commit.message, '[ci]')
 
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
@@ -33,12 +37,26 @@ jobs:
       - name: Install Bun
         run: npm install -g bun
 
-      - name: Install Wails
+      - name: Install Wails (Windows)
+        if: runner.os == 'Windows'
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
+
+      - name: Install Nix (Linux)
+        if: runner.os == 'Linux'
+        uses: cachix/install-nix-action@v27
+
+      - name: Install Wails (Linux)
+        if: runner.os == 'Linux'
+        run: nix-shell -p go --run "go install github.com/wailsapp/wails/v2/cmd/wails@latest"
 
       - name: Install frontend deps
         run: bun install
         working-directory: frontend
 
-      - name: Build
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
         run: wails build
+
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: nix-shell -p pkg-config gtk3 webkit2gtk_4_0 gobject-introspection --run "export PATH=$HOME/go/bin:$PATH && wails build"
