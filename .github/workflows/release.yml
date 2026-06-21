@@ -39,15 +39,19 @@ jobs:
       - name: Build
         run: wails build -clean
 
-      - name: Rename binary
-        run: ren build\bin\thunder.exe thunder-windows-amd64.exe
+      - name: Check binary
+        run: dir build\bin
         shell: cmd
+
+      - name: Rename binary
+        run: Rename-Item -Path "build\bin\thunder.exe" -NewName "thunder-windows-amd64.exe"
+        shell: pwsh
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: thunder-windows-amd64
-          path: thunder-windows-amd64.exe
+          path: build/bin/thunder-windows-amd64.exe
 
   release:
     needs: build
