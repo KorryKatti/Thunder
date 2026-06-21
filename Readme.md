@@ -1,5 +1,7 @@
 # Thunder
 
+![Thunder](https://raw.githubusercontent.com/dynobo/lmdiag/master/badge.png)
+
 **A modern desktop app launcher for Python programs on GitHub.**
 
 Paste a GitHub URL. Thunder downloads, installs, and launches it — with its own virtual environment, no setup required.

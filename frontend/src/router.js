@@ -40,6 +40,8 @@ function resolve() {
             });
             currentRoute = { path, params, pattern: route.pattern };
             route.handler(params);
+            const mc = document.getElementById('main-content');
+            if (mc) mc.scrollTop = 0;
             return;
         }
     }

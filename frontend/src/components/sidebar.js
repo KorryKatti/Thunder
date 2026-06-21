@@ -5,6 +5,7 @@ import { getCurrentPath, navigate } from '../router.js';
 const navItems = [
     { id: 'home', label: 'Home', icon: homeIcon(), path: '/' },
     { id: 'library', label: 'Library', icon: libraryIcon(), path: '/library' },
+    { id: 'downloads', label: 'Downloads', icon: downloadsIcon(), path: '/downloads' },
     { id: 'community', label: 'Community', icon: communityIcon(), path: '/community' },
     { id: 'settings', label: 'Settings', icon: settingsIcon(), path: '/settings' },
     { id: 'help', label: 'Help', icon: helpIcon(), path: '/help' }
@@ -16,6 +17,10 @@ function homeIcon() {
 
 function libraryIcon() {
     return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
+}
+
+function downloadsIcon() {
+    return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
 }
 
 function settingsIcon() {
@@ -48,7 +53,7 @@ export function renderSidebar(container) {
             })
         ),
         el('div', { className: 'sidebar-footer' }, [
-            el('div', { className: 'sidebar-version', text: 'v0.1.0-nightly' })
+            el('div', { className: 'sidebar-version', text: 'v0.1.0-stable' })
         ])
     ]);
 

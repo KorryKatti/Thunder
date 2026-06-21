@@ -83,6 +83,12 @@ export function renderHelp(container) {
 
     container.appendChild(hero);
 
+    const tldr = el('div', { className: 'help-section' }, [
+        el('h2', { className: 'help-section-title', text: 'TL;DR' }),
+        el('p', { className: 'help-section-text', html: 'Paste a GitHub URL \u2192 Thunder downloads it, creates a Python venv, installs deps, and launches the app. No terminal needed. Manage everything from the Library.' })
+    ]);
+    container.appendChild(tldr);
+
     sections.forEach(section => {
         const sectionEl = el('div', { className: 'help-section' }, [
             el('h2', { className: 'help-section-title', text: section.title })

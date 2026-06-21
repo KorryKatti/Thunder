@@ -1,8 +1,23 @@
 import { el } from '../utils.js';
 import { navigate } from '../router.js';
 import { renderURLBar } from '../components/urlbar.js';
-import { checkUV, installUV } from '../api.js';
+import { checkUV, installUV, getAvatarUrl, getInstalledApps } from '../api.js';
 import { showToast } from '../components/toasts.js';
+
+const featuredApps = [
+    {
+        name: 'Evidex',
+        url: 'https://github.com/jyun-lab/Evidex',
+        description: 'Local-first desktop app for searchable experiment records, linked lab files, and CSV waveform previews.',
+        tags: ['Science', 'Data']
+    },
+    {
+        name: 'python-tkinter-calculator',
+        url: 'https://github.com/LasyaGanesuni/python-tkinter-calculator',
+        description: 'A simple GUI calculator made with Python and tkinter.',
+        tags: ['GUI', 'Tool']
+    }
+];
 
 export function renderHome(container) {
     container.innerHTML = '';
@@ -23,10 +38,62 @@ export function renderHome(container) {
     const uvSection = el('div', { className: 'home-uv-section', id: 'uv-status' });
     renderUVStatus(uvSection);
 
+    const featuredSection = el('div', { className: 'home-featured' });
+    renderFeaturedApps(featuredSection);
+
     wrapper.appendChild(hero);
     wrapper.appendChild(urlSection);
     wrapper.appendChild(uvSection);
+    wrapper.appendChild(featuredSection);
     container.appendChild(wrapper);
+}
+
+async function renderFeaturedApps(container) {
+    const installed = await getInstalledApps();
+    const installedUrls = new Set(installed.map(a => a.url));
+
+    const header = el('div', { className: 'home-section-header' }, [
+        el('h2', { className: 'home-section-title', text: 'Featured Apps' }),
+        el('button', {
+            className: 'home-section-more',
+            text: 'View all',
+            onClick: () => navigate('/library')
+        })
+    ]);
+
+    const grid = el('div', { className: 'home-featured-grid' },
+        featuredApps.map(app => {
+            const isInstalled = installedUrls.has(app.url);
+            const avatarUrl = getAvatarUrl(app.url);
+
+            const avatar = avatarUrl
+                ? el('img', { className: 'featured-card-avatar', src: avatarUrl, alt: app.name, onerror: function() { this.style.display = 'none'; this.nextSibling.style.display = 'flex'; } })
+                : null;
+            const fallback = el('div', {
+                className: 'featured-card-icon',
+                text: app.name.charAt(0).toUpperCase(),
+                style: avatarUrl ? { display: 'none' } : {}
+            });
+
+            return el('div', { className: 'featured-card', onClick: () => navigate(`/app/${encodeURIComponent(app.url)}`) }, [
+                ...([avatar, fallback].filter(Boolean)),
+                el('div', { className: 'featured-card-info' }, [
+                    el('h3', { className: 'featured-card-name', text: app.name }),
+                    el('p', { className: 'featured-card-desc', text: app.description }),
+                    el('div', { className: 'featured-card-tags' },
+                        app.tags.map(t => el('span', { className: 'featured-tag', text: t }))
+                    )
+                ]),
+                el('span', {
+                    className: isInstalled ? 'featured-card-badge installed' : 'featured-card-badge',
+                    text: isInstalled ? 'Installed' : 'Install'
+                })
+            ]);
+        })
+    );
+
+    container.appendChild(header);
+    container.appendChild(grid);
 }
 
 async function renderUVStatus(container) {

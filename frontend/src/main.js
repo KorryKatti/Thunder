@@ -12,6 +12,7 @@ import { renderLibrary } from './views/library.js';
 import { renderSettings } from './views/settings.js';
 import { renderHelp } from './views/help.js';
 import { renderCommunity } from './views/community.js';
+import { renderDownloads } from './views/downloads.js';
 
 function renderApp() {
     const app = document.getElementById('app');
@@ -47,6 +48,11 @@ function renderApp() {
     addRoute('/library', (params) => {
         setState('currentView', 'library');
         renderLibrary(mainContent);
+    });
+
+    addRoute('/downloads', (params) => {
+        setState('currentView', 'downloads');
+        renderDownloads(mainContent);
     });
 
     addRoute('/settings', (params) => {

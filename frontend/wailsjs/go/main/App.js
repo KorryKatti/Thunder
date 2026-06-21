@@ -10,6 +10,10 @@ export function CheckUVInstalled() {
   return window['go']['main']['App']['CheckUVInstalled']();
 }
 
+export function ClearCache() {
+  return window['go']['main']['App']['ClearCache']();
+}
+
 export function CreateConfig(arg1) {
   return window['go']['main']['App']['CreateConfig'](arg1);
 }
@@ -26,6 +30,10 @@ export function GetAppDetail(arg1) {
   return window['go']['main']['App']['GetAppDetail'](arg1);
 }
 
+export function GetAppSize(arg1) {
+  return window['go']['main']['App']['GetAppSize'](arg1);
+}
+
 export function GetInstalledApps() {
   return window['go']['main']['App']['GetInstalledApps']();
 }
@@ -36,6 +44,10 @@ export function GetReadme(arg1) {
 
 export function GetRepoInfo(arg1) {
   return window['go']['main']['App']['GetRepoInfo'](arg1);
+}
+
+export function GetSettings() {
+  return window['go']['main']['App']['GetSettings']();
 }
 
 export function GetUVVersion() {
@@ -58,10 +70,30 @@ export function OpenExternal(arg1) {
   return window['go']['main']['App']['OpenExternal'](arg1);
 }
 
+export function RecordLaunch(arg1) {
+  return window['go']['main']['App']['RecordLaunch'](arg1);
+}
+
+export function RepairApp(arg1) {
+  return window['go']['main']['App']['RepairApp'](arg1);
+}
+
+export function ResetAllData() {
+  return window['go']['main']['App']['ResetAllData']();
+}
+
 export function UninstallApp(arg1) {
   return window['go']['main']['App']['UninstallApp'](arg1);
 }
 
+export function UpdateApp(arg1) {
+  return window['go']['main']['App']['UpdateApp'](arg1);
+}
+
 export function UpdateLaunchType(arg1, arg2) {
   return window['go']['main']['App']['UpdateLaunchType'](arg1, arg2);
+}
+
+export function UpdateSettings(arg1, arg2, arg3) {
+  return window['go']['main']['App']['UpdateSettings'](arg1, arg2, arg3);
 }

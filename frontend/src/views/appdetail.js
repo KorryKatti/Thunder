@@ -1,8 +1,9 @@
 import { el, formatNumber, escapeHtml } from '../utils.js';
 import { navigate } from '../router.js';
 import { renderURLBar } from '../components/urlbar.js';
-import { fetchRepoInfo, fetchReadme, detectPythonProject, downloadAndInstall, openExternal } from '../api.js';
+import { fetchRepoInfo, fetchReadme, detectPythonProject, downloadAndInstall, openExternal, onInstallProgress, offInstallProgress, getAvatarUrl } from '../api.js';
 import { showToast } from '../components/toasts.js';
+import { addDownload, updateDownload, completeDownload } from '../downloads.js';
 import { marked } from 'marked';
 
 let currentProjectInfo = null;
@@ -10,6 +11,7 @@ let currentProjectInfo = null;
 export function renderAppDetail(container, encodedURL) {
     container.innerHTML = '';
     currentProjectInfo = null;
+    offInstallProgress();
 
     const url = decodeURIComponent(encodedURL);
 
@@ -60,11 +62,19 @@ async function loadRepoData(container, url) {
 }
 
 function renderRepoPage(container, repo, readme, projectInfo, url) {
-    // Hero
+    const avatarUrl = getAvatarUrl(url);
+
+    const heroIcon = avatarUrl
+        ? el('img', { className: 'detail-hero-icon', src: avatarUrl, alt: repo.Name, onerror: function() { this.style.display = 'none'; this.nextSibling.style.display = 'flex'; } })
+        : null;
+    const heroIconFallback = el('div', { className: 'detail-hero-icon', text: repo.Name.charAt(0).toUpperCase(), style: avatarUrl ? { display: 'none' } : {} });
+
+    const heroChildren = [heroIcon, heroIconFallback].filter(Boolean);
+
     const hero = el('div', { className: 'detail-hero' }, [
         el('div', { className: 'detail-hero-bg' }),
         el('div', { className: 'detail-hero-content' }, [
-            el('div', { className: 'detail-hero-icon', text: repo.Name.charAt(0).toUpperCase() }),
+            ...heroChildren,
             el('div', { className: 'detail-hero-info' }, [
                 el('p', { className: 'detail-hero-fullname', text: repo.FullName }),
                 el('h1', { className: 'detail-hero-name', text: repo.Name }),
@@ -77,6 +87,7 @@ function renderRepoPage(container, repo, readme, projectInfo, url) {
     const stats = el('div', { className: 'detail-stats' }, [
         createStat('★', formatNumber(repo.Stars), 'Stars'),
         createStat('⑂', formatNumber(repo.Forks), 'Forks'),
+        repo.Size ? createStat('📦', formatRepoSize(repo.Size), 'Size') : null,
         repo.Language ? createStat('●', repo.Language, 'Language') : null,
         repo.LicenseName ? createStat('📄', repo.LicenseName, 'License') : null
     ].filter(Boolean));
@@ -162,20 +173,56 @@ function createProjectCard(projectInfo) {
     ]);
 }
 
+const stepLabels = {
+    info: 'Preparing...',
+    download: 'Downloading repository...',
+    extract: 'Extracting files...',
+    detect: 'Detecting project type...',
+    venv: 'Creating virtual environment...',
+    deps: 'Installing dependencies...',
+    done: 'Complete!'
+};
+
 function renderInstallButton(container, url, repoName) {
+    const progressBar = el('div', { className: 'install-progress', style: { display: 'none' } }, [
+        el('div', { className: 'install-progress-bar' }),
+        el('span', { className: 'install-progress-text', text: '' })
+    ]);
+
     const btn = el('button', {
         className: 'btn btn-green btn-lg install-btn',
         text: 'Download & Install',
         onClick: async () => {
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-inline"></span> Downloading...';
+            btn.innerHTML = '<span class="spinner-inline"></span> Starting...';
+            progressBar.style.display = 'block';
+
+            const dlId = addDownload(repoName, url);
+
+            onInstallProgress((data) => {
+                if (data.percent) {
+                    const pct = parseInt(data.percent);
+                    progressBar.querySelector('.install-progress-bar').style.width = pct + '%';
+                    progressBar.querySelector('.install-progress-text').textContent = `Downloading... ${pct}%`;
+                    btn.innerHTML = `<span class="spinner-inline"></span> Downloading... ${pct}%`;
+                    updateDownload(dlId, `Downloading... ${pct}%`);
+                } else {
+                    const label = stepLabels[data.step] || data.message;
+                    btn.innerHTML = `<span class="spinner-inline"></span> ${label}`;
+                    updateDownload(dlId, label);
+                }
+            });
 
             const result = await downloadAndInstall(url);
+            offInstallProgress();
+
             if (result.success) {
+                completeDownload(dlId, true);
                 showToast(`${repoName} installed successfully!`, 'success');
                 btn.textContent = 'Installed';
                 btn.classList.add('installed');
             } else {
+                completeDownload(dlId, false, result.error);
                 showToast('Install failed: ' + result.error, 'error');
                 btn.disabled = false;
                 btn.textContent = 'Download & Install';
@@ -193,6 +240,7 @@ function renderInstallButton(container, url, repoName) {
     ]);
 
     container.appendChild(actions);
+    container.appendChild(progressBar);
 }
 
 function createStat(icon, value, label) {
@@ -207,4 +255,10 @@ function formatFileSize(bytes) {
     if (bytes < 1024) return bytes + ' B';
     if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
     return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function formatRepoSize(kb) {
+    if (kb < 1024) return kb + ' KB';
+    if (kb < 1024 * 1024) return (kb / 1024).toFixed(1) + ' MB';
+    return (kb / (1024 * 1024)).toFixed(1) + ' GB';
 }

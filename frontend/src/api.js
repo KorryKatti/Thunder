@@ -8,13 +8,20 @@ import {
     DownloadAndInstall,
     GetInstalledApps,
     GetAppDetail,
+    GetAppSize,
     LaunchApp,
     UninstallApp,
+    UpdateApp,
     CreateConfig,
     UpdateLaunchType,
     CheckForUpdates,
     GetUpdateCount,
-    OpenExternal
+    OpenExternal,
+    GetSettings,
+    UpdateSettings,
+    ClearCache,
+    ResetAllData,
+    RepairApp
 } from '../wailsjs/go/main/App';
 
 // --- UV ---
@@ -123,6 +130,34 @@ export async function uninstallApp(dirName) {
     }
 }
 
+export async function getAppSize(dirName) {
+    try {
+        return await GetAppSize(dirName);
+    } catch (e) {
+        return '?';
+    }
+}
+
+export async function updateApp(dirName) {
+    try {
+        const output = await UpdateApp(dirName);
+        return { success: true, output };
+    } catch (e) {
+        console.error('UpdateApp error:', e);
+        return { success: false, error: String(e) };
+    }
+}
+
+export async function repairApp(dirName) {
+    try {
+        const output = await RepairApp(dirName);
+        return { success: true, output };
+    } catch (e) {
+        console.error('RepairApp error:', e);
+        return { success: false, error: String(e) };
+    }
+}
+
 export async function createConfig(dirName) {
     try {
         await CreateConfig(dirName);
@@ -171,4 +206,71 @@ export async function openExternal(url) {
     } catch (e) {
         console.error('OpenExternal error:', e);
     }
+}
+
+// --- Settings ---
+
+export async function getSettings() {
+    try {
+        return await GetSettings();
+    } catch (e) {
+        console.error('GetSettings error:', e);
+        return { github_token: '', install_dir: '', python_path: '' };
+    }
+}
+
+export async function updateSettings(gitHubToken, installDir, pythonPath) {
+    try {
+        await UpdateSettings(gitHubToken, installDir, pythonPath);
+        return { success: true };
+    } catch (e) {
+        console.error('UpdateSettings error:', e);
+        return { success: false, error: String(e) };
+    }
+}
+
+export async function clearCache() {
+    try {
+        await ClearCache();
+        return { success: true };
+    } catch (e) {
+        console.error('ClearCache error:', e);
+        return { success: false, error: String(e) };
+    }
+}
+
+export async function resetAllData() {
+    try {
+        await ResetAllData();
+        return { success: true };
+    } catch (e) {
+        console.error('ResetAllData error:', e);
+        return { success: false, error: String(e) };
+    }
+}
+
+// --- Progress Events ---
+
+export function onInstallProgress(callback) {
+    if (window.runtime && window.runtime.EventsOn) {
+        window.runtime.EventsOn('install-progress', callback);
+    }
+}
+
+export function offInstallProgress() {
+    if (window.runtime && window.runtime.EventsOff) {
+        window.runtime.EventsOff('install-progress');
+    }
+}
+
+// --- Avatars ---
+
+export function getAvatarUrl(url) {
+    try {
+        const match = url.match(/github\.com\/([^/]+)/);
+        if (match) {
+            return `https://github.com/${match[1]}.png`;
+        }
+    } catch (e) {}
+    return '';
 }

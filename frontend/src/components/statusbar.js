@@ -6,7 +6,7 @@ export function renderStatusBar(container) {
         el('div', { className: 'statusbar-left' }, [
             el('span', { className: 'statusbar-brand', html: '⚡ <strong>Thunder</strong>' }),
             el('span', { className: 'statusbar-sep', text: '·' }),
-            el('span', { className: 'statusbar-version', text: 'v0.1.0-nightly' })
+            el('span', { className: 'statusbar-version', text: 'v0.1.0-stable' })
         ]),
         el('div', { className: 'statusbar-right' }, [
             el('span', { className: 'statusbar-stat', id: 'status-installed', text: '...' }),
