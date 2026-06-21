@@ -47,7 +47,7 @@ jobs:
 
       - name: Install Wails (Linux)
         if: runner.os == 'Linux'
-        run: nix-shell -p go --run "go install github.com/wailsapp/wails/v2/cmd/wails@latest"
+        run: nix develop --command go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
       - name: Install frontend deps
         run: bun install
@@ -59,4 +59,4 @@ jobs:
 
       - name: Build (Linux)
         if: runner.os == 'Linux'
-        run: nix-shell -p pkg-config gtk3 webkit2gtk_4_0 gobject-introspection --run "export PATH=$HOME/go/bin:$PATH && wails build"
+        run: nix develop --command wails build
