@@ -39,12 +39,15 @@ jobs:
       - name: Build
         run: wails build -clean
 
-      - name: Check binary
-        run: dir build\bin
-        shell: cmd
-
       - name: Rename binary
-        run: Rename-Item -Path "build\bin\thunder.exe" -NewName "thunder-windows-amd64.exe"
+        run: |
+          $exe = Get-ChildItem -Path "build\bin" -Filter "*.exe" | Select-Object -First 1
+          if ($exe) {
+            Rename-Item -Path $exe.FullName -NewName "thunder-windows-amd64.exe"
+          } else {
+            Write-Error "No .exe found in build\bin"
+            exit 1
+          }
         shell: pwsh
 
       - name: Upload artifact
