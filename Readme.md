@@ -1,4 +1,4 @@
-# Thunder
+# [⬇ Download Thunder](https://github.com/KorryKatti/Thunder/releases/latest)
 
 ![Thunder](https://raw.githubusercontent.com/dynobo/lmdiag/master/badge.png)
 
