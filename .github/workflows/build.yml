@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest]
+        os: [windows-latest, ubuntu-22.04]
 
     runs-on: ${{ matrix.os }}
 
@@ -37,26 +37,16 @@ jobs:
       - name: Install Bun
         run: npm install -g bun
 
-      - name: Install Wails (Windows)
-        if: runner.os == 'Windows'
+      - name: Install Linux deps
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
+
+      - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
-
-      - name: Install Nix (Linux)
-        if: runner.os == 'Linux'
-        uses: cachix/install-nix-action@v27
-
-      - name: Install Wails (Linux)
-        if: runner.os == 'Linux'
-        run: nix develop --command go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
       - name: Install frontend deps
         run: bun install
         working-directory: frontend
 
-      - name: Build (Windows)
-        if: runner.os == 'Windows'
+      - name: Build
         run: wails build
-
-      - name: Build (Linux)
-        if: runner.os == 'Linux'
-        run: nix develop --command wails build
