@@ -10,20 +10,7 @@ permissions:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        include:
-          - os: ubuntu-latest
-            target: linux-amd64
-            binary: thunder
-          - os: macos-latest
-            target: macos-universal
-            binary: thunder
-          - os: windows-latest
-            target: windows-amd64
-            binary: thunder.exe
-
-    runs-on: ${{ matrix.os }}
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
@@ -42,12 +29,6 @@ jobs:
       - name: Install Bun
         run: npm install -g bun
 
-      - name: Install Linux deps
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev || sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev
-
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
 
@@ -59,31 +40,27 @@ jobs:
         run: wails build -clean
 
       - name: Rename binary
-        run: mv build/bin/${{ matrix.binary }} ${{ matrix.binary }}
-        shell: bash
+        run: ren build\bin\thunder.exe thunder-windows-amd64.exe
+        shell: cmd
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: thunder-${{ matrix.target }}
-          path: ${{ matrix.binary }}
+          name: thunder-windows-amd64
+          path: thunder-windows-amd64.exe
 
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download all artifacts
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
-          merge-multiple: true
+          name: thunder-windows-amd64
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           generate_release_notes: true
-          files: |
-            artifacts/thunder-linux-amd64
-            artifacts/thunder-macos-universal
-            artifacts/thunder-windows-amd64.exe
+          files: thunder-windows-amd64.exe
