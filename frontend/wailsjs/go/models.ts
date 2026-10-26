@@ -9,6 +9,8 @@ export namespace main {
 	    entry_point: string;
 	    description: string;
 	    installed_at: string;
+	    launch_count: number;
+	    last_launched: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new IndexEntry(source);
@@ -24,6 +26,8 @@ export namespace main {
 	        this.entry_point = source["entry_point"];
 	        this.description = source["description"];
 	        this.installed_at = source["installed_at"];
+	        this.launch_count = source["launch_count"];
+	        this.last_launched = source["last_launched"];
 	    }
 	}
 	export class ProjectInfo {
@@ -31,6 +35,7 @@ export namespace main {
 	    has_requirements: boolean;
 	    project_name: string;
 	    entry_point: string;
+	    script_name: string;
 	    language: string;
 	    file_name: string;
 	    file_size: number;
@@ -45,6 +50,7 @@ export namespace main {
 	        this.has_requirements = source["has_requirements"];
 	        this.project_name = source["project_name"];
 	        this.entry_point = source["entry_point"];
+	        this.script_name = source["script_name"];
 	        this.language = source["language"];
 	        this.file_name = source["file_name"];
 	        this.file_size = source["file_size"];
@@ -56,6 +62,7 @@ export namespace main {
 	    Description: string;
 	    Stars: number;
 	    Forks: number;
+	    Size: number;
 	    Language: string;
 	    LicenseName: string;
 	    URL: string;
@@ -72,10 +79,27 @@ export namespace main {
 	        this.Description = source["Description"];
 	        this.Stars = source["Stars"];
 	        this.Forks = source["Forks"];
+	        this.Size = source["Size"];
 	        this.Language = source["Language"];
 	        this.LicenseName = source["LicenseName"];
 	        this.URL = source["URL"];
 	        this.DefaultBranch = source["DefaultBranch"];
+	    }
+	}
+	export class Settings {
+	    github_token: string;
+	    install_dir: string;
+	    python_path: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Settings(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.github_token = source["github_token"];
+	        this.install_dir = source["install_dir"];
+	        this.python_path = source["python_path"];
 	    }
 	}
 

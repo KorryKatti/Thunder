@@ -6,6 +6,8 @@ export function CheckForUpdates():Promise<Array<Record<string, string>>>;
 
 export function CheckUVInstalled():Promise<boolean>;
 
+export function ClearCache():Promise<void>;
+
 export function CreateConfig(arg1:string):Promise<void>;
 
 export function DetectPythonProject(arg1:string):Promise<main.ProjectInfo>;
@@ -14,11 +16,15 @@ export function DownloadAndInstall(arg1:string):Promise<string>;
 
 export function GetAppDetail(arg1:string):Promise<Record<string, any>>;
 
+export function GetAppSize(arg1:string):Promise<string>;
+
 export function GetInstalledApps():Promise<Array<main.IndexEntry>>;
 
 export function GetReadme(arg1:string):Promise<string>;
 
 export function GetRepoInfo(arg1:string):Promise<main.RepoInfo>;
+
+export function GetSettings():Promise<main.Settings>;
 
 export function GetUVVersion():Promise<string>;
 
@@ -30,6 +36,16 @@ export function LaunchApp(arg1:string):Promise<void>;
 
 export function OpenExternal(arg1:string):Promise<void>;
 
+export function RecordLaunch(arg1:string):Promise<void>;
+
+export function RepairApp(arg1:string):Promise<string>;
+
+export function ResetAllData():Promise<void>;
+
 export function UninstallApp(arg1:string):Promise<void>;
 
+export function UpdateApp(arg1:string):Promise<string>;
+
 export function UpdateLaunchType(arg1:string,arg2:string):Promise<void>;
+
+export function UpdateSettings(arg1:string,arg2:string,arg3:string):Promise<void>;
